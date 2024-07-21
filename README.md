@@ -8,3 +8,16 @@ In order to carry out these simulations, there are many frameworks, but one that
 It makes it easy to create and use models where agents act on their own. You can define environments with a special agent called the Game Master (GM), who manages the world where player agents interact. The agents say what they want to do in simple language, and the GM turns their words into actions.
 
 *Concordia requires access to a standard LLM API.*
+
+## Main scenario
+We will carry out an experiment related to disinformation, but before getting into details, it might be of high relevance to have present its definition, since it is often confused with misinformation. 
+
+The key difference between misinformation and disinformation is that **misinformation** refers to false or inaccurate information that is unintentionally spread, while **disinformation** refers to false or misleading information that is intentionally spread with the purpose of deceiving or manipulating others.
+
+For this scenario, we will look at different types of people based on a survey about disinformation and/or their political ideologies, and observe how fake news spreads based on those types.
+
+### Part 1: Definition of goals, subgoals, premise, and context
+
+
+
+## Files available in the repository
