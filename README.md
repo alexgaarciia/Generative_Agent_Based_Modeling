@@ -19,12 +19,10 @@ For this scenario, we will look at different types of people based on their poli
 ### Part 1: Definition of premise, subgoals, goal, and context
 * Premise: The study of disinformation and its rapid spread poses new challenges beyond the established conventions of traditional media studies. Unlike misinformation, disinformation involves the intentional spread of false or misleading information to deceive or manipulate. Understanding how fake news spreads and evaluating the effectiveness of various strategies to prevent its spread is crucial in today's information landscape.
 
-* Subgoals:
-  1. Spread a piece of fake news and observe how it propagates among different types of individuals.
-  2. Evaluate the effectiveness of various strategies and tools designed to prevent the spread of fake news in real-time.
+* Subgoal: Discuss the veracity of the information you receive. Evaluate and share your thoughts on whether the news might be true or false, and explain your reasoning. Consider the source, your own knowledge, and any available verification tools.
+  
+* Goal: An agent introduces a piece of fake news and you need to observe its spread. Observe the effect it has on each character and assess the effectiveness of different strategies and tools used to prevent the spread of fake news, providing insights into which methods are most successful.
 
-* Goal: Introduce a piece of fake news and observe its spread. Identify and assess the effectiveness of different strategies and tools used to prevent the spread of fake news, providing insights into which methods are most successful.
-
-* Context: This is an interdisciplinary research workshop where several participants engage with the topic of disinformation to develop innovative and speculative views on how fake news spreads and assess the effectiveness of various strategies to combat it in real-time.
+* Context: A group of friends is having a casual conversation when one of them suddenly shares a surprising piece of news. The friends then discuss whether the news is true or false, evaluating the information based on their knowledge, the credibility of the source, and any verification tools they have. This setting provides a realistic scenario for observing the spread of fake news and testing strategies to prevent it.
 
 ## Files available in the repository
