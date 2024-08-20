@@ -1,3 +1,5 @@
+![Python Version](https://img.shields.io/badge/python-3.12.4-blue)
+
 # ConcordiaSims
 ## Overview
 The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simulations used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.
