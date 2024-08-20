@@ -1,6 +1,6 @@
 # ConcordiaSims
 ## Overview
-The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simultaions used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.
+The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simulations used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.
 
 ## Framework
 In order to carry out these simulations, there are many frameworks, but one that stands out is [Concordia](https://github.com/google-deepmind/concordia), a library for generative social simulation. 
@@ -9,6 +9,7 @@ It makes it easy to create and use models where agents act on their own. You can
 
 *Concordia requires access to a standard LLM API.*
 
+<!---
 ## Main scenario
 We will carry out an experiment related to disinformation, but before getting into details, it might be of high relevance to have present its definition, since it is often confused with misinformation. 
 
@@ -26,3 +27,5 @@ For this scenario, we will look at different types of people based on their poli
 * Context: A group of friends is having a casual conversation when one of them suddenly shares a surprising piece of news. The friends then discuss whether the news is true or false, evaluating the information based on their knowledge, the credibility of the source, and any verification tools they have. This setting provides a realistic scenario for observing the spread of fake news and testing strategies to prevent it.
 
 ## Files available in the repository
+-->
+
