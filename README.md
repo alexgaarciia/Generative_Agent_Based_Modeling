@@ -11,6 +11,12 @@ It makes it easy to create and use models where agents act on their own. You can
 
 Traditionally, *Concordia requires access to a standard LLM API* to function effectively. However, instead of relying on a remote API, we will be using LM Studio to host a Local Inference Server. This server mimics select OpenAI API endpoints, allowing us to run the LLM locally on our own hardware. This approach not only provides greater control over the inference process but also enhances privacy and security by keeping all data processing on local machines.
 
+## Agents
+Normally, agents are made up of these elements:
+1. Associative memory: saves all observations, and does retrieval of semantically relevant memories on request.
+2. Formative memory: allows customization of traits, specific memories, and even details like the agent's birthday.
+3. Component: represents a part of the agent's thought process. Retrieves items from associative memory and formats or summarizes them in a way that makes them useful as context, either for another component or for action selection.
+
 <!---
 ## Main scenario
 We will carry out an experiment related to disinformation, but before getting into details, it might be of high relevance to have present its definition, since it is often confused with misinformation. 
