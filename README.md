@@ -9,7 +9,7 @@ In order to carry out these simulations, there are many frameworks, but one that
 
 It makes it easy to create and use models where agents act on their own. You can define environments with a special agent called the Game Master (GM), who manages the world where player agents interact. The agents say what they want to do in simple language, and the GM turns their words into actions.
 
-Traditionally, *Concordia requires access to a standard LLM API* to function effectively. However, instead of relying on a remote API, we will be using LM Studio to host a Local Inference Server. This server mimics select OpenAI API endpoints, allowing us to run the LLM locally on our own hardware. This approach not only provides greater control over the inference process but also enhances privacy and security by keeping all data processing on local machines.
+Traditionally, *Concordia requires access to a standard LLM API* to function effectively. However, instead of relying on a remote API, we will be using LM Studio to host a Local Inference Server. This server mimics select OpenAI API endpoints, allowing us to run the LLM locally on our own hardware. 
 
 ## Agents
 Normally, agents are made up of these elements:
