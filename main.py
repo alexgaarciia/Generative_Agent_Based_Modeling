@@ -1,6 +1,5 @@
 import datetime
 import numpy as np
-import sentence_transformers
 import streamlit as st
 
 from IPython import display
@@ -25,7 +24,8 @@ if not GPT_API_KEY:
 model = gpt_model.GptLanguageModel(api_key=GPT_API_KEY,
                                    model_name=GPT_MODEL_NAME)
 
-_embedder_model = sentence_transformers.SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+from sentence_transformers import SentenceTransformer
+_embedder_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 embedder = lambda x: _embedder_model.encode(x, show_progress_bar=False)
 
 START_TIME = datetime.datetime(hour=20, year=2024, month=10, day=1)
