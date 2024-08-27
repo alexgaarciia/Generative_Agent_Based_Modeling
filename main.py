@@ -2,7 +2,7 @@ import datetime
 import numpy as np
 import streamlit as st
 
-pip install ipython
+import IPython
 from IPython import display
 from concordia import typing
 from concordia.agents import basic_agent
