@@ -3,10 +3,6 @@ import streamlit as st
 # Dictionary mapping page names to functions
 pages = {
     "Home": "main.py",
-    "About": "./pages/about.py",
-    "Key Features": "./pages/features.py"
-    #"Agent Creation": agent_creation,
-    #"Agent Comparison": agent_comparison,
 }
 
 # Key Features Section
@@ -26,4 +22,3 @@ if home_button:
     # Switch to the selected page
     page_file = pages["Home"]
     st.switch_page(page_file)
-

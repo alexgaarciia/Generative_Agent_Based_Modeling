@@ -2,9 +2,6 @@ import streamlit as st
 
 pages = {
     "Home": "main.py",
-    "About": "./pages/about.py",
-    #"Agent Creation": agent_creation,
-    #"Agent Comparison": agent_comparison,
 }
 
 st.markdown("<h3>About This Platform: A Hands-On Tool for GABM Experimentation</h3>", unsafe_allow_html=True)
