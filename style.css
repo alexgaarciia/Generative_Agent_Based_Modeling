@@ -1,0 +1,22 @@
+/* Background */
+[data-testid="stAppViewContainer"] {
+    background-color: #e5e5f7;
+    background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #e5e5f7 14px), repeating-linear-gradient(#45a3f755, #45a3f7);
+}
+
+/* H1 Styling and Animation */
+h1 {
+    color: #2c618f;
+    text-align: center;
+    position: absolute;
+    top: 200px;
+    font-size: 2.5em;
+    opacity: 0;
+    animation: fadeIn 3s ease-in forwards;
+}
+
+/* Keyframes for Fade-In */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
