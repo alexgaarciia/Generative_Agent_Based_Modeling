@@ -7,6 +7,7 @@ pages = {
     "About Us": "./pages/about_us.py"
 }
 
+
 # Background styling
 st.markdown(
     """
@@ -16,6 +17,7 @@ st.markdown(
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 # Details
 st.markdown(
@@ -38,7 +40,7 @@ st.markdown(
 # Why this page?
 st.markdown(
     """
-    <h1 style="font-size: 60px; margin-left: auto; margin-right: 0; text-align: right;">
+    <h1 style="font-size: 60px; margin-left: auto; margin-right: 0; text-align: right; margin-top: -80px;">
         <span style="font-style: italic; color: blue;">Why</span> This Page?
     </h1>
     """, unsafe_allow_html=True)
@@ -62,11 +64,18 @@ st.markdown(
         <span style="font-style: italic; color: blue;">How</span> Will We Do This?
     </h1>
     """, unsafe_allow_html=True)
+
 st.markdown(
     """
-    <p style="width: 600px; height: 300px; ">
-        TEXT HERE
-    </p>
+    <div style="width: 600px; height: auto; text-align: left;">
+        <p>This platform offers the following key features:</p>
+        <ul>
+            <li><strong>Create Custom Agents:</strong> Design virtual agents with unique attributes and characteristics.</li>
+            <li><strong>Simulation Design:</strong> Run simulations to observe and analyze agent behaviors and interactions within various scenarios.</li>
+            <li><strong>Display Agent Information:</strong> Access and review detailed information about each created agent.</li>
+            <li><strong>Compare Personalities and Ideologies:</strong> Contrast agents with similar or differing political and ideological profiles.</li>
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
 
 
