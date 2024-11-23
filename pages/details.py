@@ -8,7 +8,25 @@ pages = {
     "About Us": "./pages/about_us.py"
 }
 
-st.markdown("<h3>About This Platform: A Hands-On Tool for GABM Experimentation</h3>", unsafe_allow_html=True)
+# Background styling
+st.markdown(
+    """
+    <style>
+    [data-testid="stAppViewContainer"] {
+        background: radial-gradient(circle at 88% 102%,#3E3EDE, #BEE8DF, #60CAE8, #99B5D5)
+    }
+    </style>
+""", unsafe_allow_html=True
+)
+
+# Header
+st.markdown(
+    """
+    <h1 style="font-size: 60px;">IT'S NOT JUST AI,<br>IT'S ANOTHER LEVEL,<br>IT'S <span style="font-weight: bold; color: blue; font-style: italic;">GABM</span></h1>
+    """, unsafe_allow_html=True
+)
+
+# Details
 st.write(
     """
     This platform is designed to help researchers and users with minimal programming experience create and experiment with
@@ -16,7 +34,6 @@ st.write(
     explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
     """
 )
-
 
 # Create n columns to place the buttons side by side
 col1, col2, col3, col4 = st.columns(4)
