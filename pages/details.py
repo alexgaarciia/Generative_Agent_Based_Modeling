@@ -18,14 +18,13 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
-# Header
+# Details
 st.markdown(
     """
     <h1 style="font-size: 60px;">IT'S NOT JUST AI,<br>IT'S ANOTHER LEVEL,<br>IT'S <span style="font-weight: bold; color: blue; font-style: italic;">GABM</span></h1>
     """, unsafe_allow_html=True
 )
 
-# Details
 st.markdown(
     """
     <p style="width: 600px; height: 300px; ">
@@ -36,13 +35,25 @@ st.markdown(
         and predict the outcomes of different interventions.
     </p>
     """, unsafe_allow_html=True)
-#st.write(
-#    """
-#    This platform is designed to help researchers and users with minimal programming experience create and experiment with
-#    generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents,
-#    explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
-#    """
-#)
+
+# Why this page?
+st.markdown(
+    """
+    <h1 style="font-size: 60px; margin-left: auto; margin-right: 0; text-align: right;">
+        <span style="font-style: italic; color: blue;">Why</span> This Page?
+    </h1>
+    """, unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <p style="width: 600px; height: 300px; margin-left: auto; margin-right: 50px; text-align: right">
+        This platform is designed to help researchers and users with minimal programming experience create and experiment with
+        generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents,
+        explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
+    </p>
+    """, unsafe_allow_html=True)
+
 
 # Create n columns to place the buttons side by side
 col1, col2, col3 = st.columns(3)
