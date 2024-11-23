@@ -3,7 +3,7 @@ import streamlit as st
 # Dictionary mapping page names to functions
 pages = {
     "Home": "main.py",
-    "Key Features": "./pages/features.py",
+    "Simulations": "./pages/simulations.py",
     "About Us": "./pages/about_us.py"
 }
 
@@ -92,10 +92,10 @@ with col1:
         st.switch_page(page_file)
 
 with col2:
-    feature_button = st.button("Key Features")
+    feature_button = st.button("Simulations")
     if feature_button:
         # Switch to the "Key Features" page
-        page_file = pages["Key Features"]
+        page_file = pages["Simulations"]
         st.switch_page(page_file)
 
 with col3:
