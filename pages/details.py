@@ -78,29 +78,46 @@ st.markdown(
     </div>
     """, unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <style>
+        .big-arrow {
+            text-align: center;
+            font-size: 250px;  /* Very large arrow */
+            margin-top: 30px;  /* Add spacing above */
+        }
+    </style>
+    <div class="big-arrow">&#8595;</div> 
+    """, unsafe_allow_html=True)
 
 # Introduction to the Simulations area
+st.markdown(
+    """
+    <h1 style="font-size: 50px; text-align: center; margin-top: -100px;">All set to level up your experiments?</h1>
+    """, unsafe_allow_html=True
+)
 
-# Create n columns to place the buttons side by side
-col1, col2, col3 = st.columns(3)
+
+# Create a centered row of buttons with reduced space
+_, _, col1, col2, col3, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  # equal column widths for center alignment
 
 with col1:
-    home_button = st.button("Home")
+    home_button = st.button("Home", use_container_width=True)  # Ensure the button takes full width of the column
     if home_button:
-        # Switch to the selected page
         page_file = pages["Home"]
         st.switch_page(page_file)
 
 with col2:
-    feature_button = st.button("Simulations")
+    feature_button = st.button("Simulations", use_container_width=True)
     if feature_button:
-        # Switch to the "Key Features" page
         page_file = pages["Simulations"]
         st.switch_page(page_file)
 
 with col3:
-    about_us_button = st.button("About Us")
+    about_us_button = st.button("About Us", use_container_width=True)
     if about_us_button:
-        # Switch to the "About Us" page
         page_file = pages["About Us"]
         st.switch_page(page_file)
+
+# Add line breaks after the buttons
+st.markdown("<br><br><br>", unsafe_allow_html=True)
