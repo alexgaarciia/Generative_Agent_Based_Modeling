@@ -14,3 +14,6 @@ Traditionally, *Concordia requires access to a standard LLM API* to function eff
 ## Useful Information
 - How does the memory of agents work? [Link Here](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/agents.md)
 - How to use Concordia with a local LLM? [Link Here](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/local_concordia.md)
+
+## Technologies Used
+Python, HTML, CSS, Streamlit
