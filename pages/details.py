@@ -49,6 +49,8 @@ st.markdown(
         This platform is designed to help researchers and users with minimal programming experience create and experiment with
         generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents,
         explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
+        <br><br>
+        👋 Hey! Want to know more? We have stated this concern in our paper: <a href="https://arxiv.org/abs/2411.07038" target="_blank">Designing Reliable Experiments with Generative Agent-Based Modeling: A Comprehensive Guide Using Concordia by Google DeepMind</a>
     </p>
     """, unsafe_allow_html=True)
 
