@@ -15,15 +15,13 @@ st.markdown(
         background: radial-gradient(circle at 88% 102%,#3E3EDE, #BEE8DF, #60CAE8, #99B5D5)
     }
     </style>
-    """, unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
 # Details
 st.markdown(
     """
     <h1 style="font-size: 60px;">IT'S NOT JUST AI,<br>IT'S ANOTHER LEVEL,<br>IT'S <span style="font-weight: bold; color: blue; font-style: italic;">GABM</span></h1>
-    """, unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -36,14 +34,14 @@ st.markdown(
     </p>
     """, unsafe_allow_html=True)
 
+
 # Why this page?
 st.markdown(
     """
     <h1 style="font-size: 60px; margin-left: auto; margin-right: 0; text-align: right;">
         <span style="font-style: italic; color: blue;">Why</span> This Page?
     </h1>
-    """, unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -54,6 +52,23 @@ st.markdown(
     </p>
     """, unsafe_allow_html=True)
 
+
+# How?
+st.markdown(
+    """
+    <h1 style="font-size: 60px;">
+        <span style="font-style: italic; color: blue;">How</span> Will We Do This?
+    </h1>
+    """, unsafe_allow_html=True)
+st.markdown(
+    """
+    <p style="width: 600px; height: 300px; ">
+        TEXT HERE
+    </p>
+    """, unsafe_allow_html=True)
+
+
+# Introduction to the Simulations area
 
 # Create n columns to place the buttons side by side
 col1, col2, col3 = st.columns(3)
