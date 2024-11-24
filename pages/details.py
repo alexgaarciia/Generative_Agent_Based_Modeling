@@ -99,21 +99,15 @@ st.markdown(
 
 
 # Create a centered row of buttons with reduced space
-_, _, col1, col2, col3, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  # equal column widths for center alignment
+_, _, col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  # equal column widths for center alignment
 
 with col1:
-    home_button = st.button("Home", use_container_width=True)  # Ensure the button takes full width of the column
-    if home_button:
-        page_file = pages["Home"]
-        st.switch_page(page_file)
-
-with col2:
     feature_button = st.button("Simulations", use_container_width=True)
     if feature_button:
         page_file = pages["Simulations"]
         st.switch_page(page_file)
 
-with col3:
+with col2:
     about_us_button = st.button("About Us", use_container_width=True)
     if about_us_button:
         page_file = pages["About Us"]
