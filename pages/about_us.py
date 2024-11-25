@@ -88,7 +88,7 @@ st.markdown("""
 
 
 # Center the button
-_, _ ,_, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+_, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
 
 with col1:
     home_button = st.button("Home", use_container_width=True)
