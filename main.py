@@ -1,3 +1,5 @@
+# How to run the file
+# streamlit run C:/path_to_main.py/main.py
 import streamlit as st
 
 # Hide the sidebar

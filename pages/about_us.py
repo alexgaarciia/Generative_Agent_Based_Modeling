@@ -1,7 +1,7 @@
 import streamlit as st
 
 pages = {
-    "Home": "main.py",
+    "Details": "./pages/details.py",
 }
 
 
@@ -91,8 +91,8 @@ st.markdown("""
 _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
 
 with col1:
-    home_button = st.button("Home", use_container_width=True)
+    home_button = st.button("Go Back", use_container_width=True)
     if home_button:
         # Switch to the selected page
-        page_file = pages["Home"]
+        page_file = pages["Details"]
         st.switch_page(page_file)
