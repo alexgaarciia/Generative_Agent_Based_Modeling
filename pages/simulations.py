@@ -13,9 +13,9 @@ if "selected_model" not in st.session_state:
 # Dictionary mapping page names to functions
 pages = {
     "Details": "./pages/details.py",
-    "Agents Creation": "./pages/agents_creation.py",
+    "Agents Creation": "./pages/agents.py",
     "Experiment": "./pages/experiment.py",
-    "Agent Confrontation": "./pages/agents_confrontation.py",
+    "Agent Confrontation": "./pages/confrontation.py",
 }
 
 # Simulation Configuration
@@ -58,7 +58,7 @@ if st.session_state["api_key"] and st.session_state["selected_model"]:
         with col3:
             confrontation_button = st.button("Agent Confrontation")
             if confrontation_button:
-                page_file = pages["Agent Confrontation"]
+                page_file = pages["Confront Agents"]
                 st.switch_page(page_file)
     else:
         st.error("Model validation failed. Please check the API key and model name.")
