@@ -1,7 +1,10 @@
 import streamlit as st
 from simulations.model_validation import validate_model
 
+
+# Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
+
 
 # Initialize session state variables
 if "api_key" not in st.session_state:
@@ -9,6 +12,10 @@ if "api_key" not in st.session_state:
 
 if "selected_model" not in st.session_state:
     st.session_state["selected_model"] = None
+
+if "model_validated" not in st.session_state:
+    st.session_state["model_validated"] = False
+
 
 # Dictionary mapping page names to functions
 pages = {
@@ -18,8 +25,9 @@ pages = {
     "Agent Confrontation": "./pages/confrontation.py",
 }
 
+
 # Simulation Configuration
-st.markdown("### Simulation Configuration")
+st.markdown("### LLM Configuration")
 with st.form("simulation_form"):
     # API Key Input
     api_key = st.text_input("Enter your API Key", type="password", help="Your API key is required for running simulations.")
@@ -35,38 +43,49 @@ with st.form("simulation_form"):
         if selected_model != "Select a Model":
             st.session_state["selected_model"] = selected_model
 
-if st.session_state["api_key"] and st.session_state["selected_model"]:
-    st.info("Validating connection with the LLM...")
-    # Validate the model connection
-    validation_success = validate_model(st.session_state["api_key"], st.session_state["selected_model"])
 
-    if validation_success:
-        st.success("The model is connected and validated successfully.")
+# Validation check only if the model has not been validated
+if st.session_state["api_key"] and st.session_state["selected_model"]:
+    if not st.session_state["model_validated"]:
+        st.info("Validating connection with the LLM...")
+
+        # Run validation if not validated yet
+        validation_success = validate_model(st.session_state["api_key"], st.session_state["selected_model"])
+
+        if validation_success:
+            st.session_state["model_validated"] = True
+            st.success("The model is connected and validated successfully.")
+        else:
+            st.error("Model validation failed. Please check the API key and model name.")
+            st.stop()
+    else:
+        st.success("Model already validated.")
+
+    # After successful validation, show the simulation options
+    if st.session_state["model_validated"]:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("### Select a Simulation Option")
         col1, col2, col3 = st.columns(3)
         with col1:
-            agents_creation_button = st.button("Create Agents")
+            agents_creation_button = st.button("👤 Create Agents 👤")
             if agents_creation_button:
                 page_file = pages["Agents Creation"]
                 st.switch_page(page_file)
         with col2:
-            simulation_button = st.button("Run Experiments")
+            simulation_button = st.button("⚗️ Run Experiments ⚗️")
             if simulation_button:
                 page_file = pages["Experiment"]
                 st.switch_page(page_file)
         with col3:
-            confrontation_button = st.button("Agent Confrontation")
+            confrontation_button = st.button("🤼‍♂️ Agent Confrontation 🤼‍♂️")
             if confrontation_button:
-                page_file = pages["Confront Agents"]
+                page_file = pages["Agent Confrontation"]
                 st.switch_page(page_file)
-    else:
-        st.error("Model validation failed. Please check the API key and model name.")
-        st.stop()
 else:
     st.warning("Please enter your API key and select a model to proceed.")
 
-# Go Back Button
+
+# "Go Back" Button
 st.markdown("<br>", unsafe_allow_html=True)
 _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
 with col1:
