@@ -4,16 +4,7 @@ pages = {
     "Details": "./pages/details.py",
 }
 
-
-# Background styling
-st.markdown(
-    """
-    <style>
-    [data-testid="stAppViewContainer"] {
-        background: radial-gradient(ellipse at 50% 125%,#009dff, rgba(106, 152, 189, 1), rgba(46, 88, 122, 1))
-    }
-    </style>
-    """, unsafe_allow_html=True)
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
 
 # Header

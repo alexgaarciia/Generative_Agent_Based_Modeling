@@ -1,8 +1,8 @@
 /* Background */
-[data-testid="stAppViewContainer"] {
+/*[data-testid="stAppViewContainer"] {
     background-color: #e5e5f7;
     background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #e5e5f7 14px), repeating-linear-gradient(#45a3f755, #45a3f7);
-}
+}*/
 
 /* H1 Styling and Animation */
 h1 {
@@ -11,7 +11,7 @@ h1 {
     font-size: 2.5em;
     opacity: 0;
     animation: fadeInH1 3s ease-in forwards;
-    margin-top: 200px;  /* Adjust space from top */
+    margin-top: 150px;  /* Adjust space from top */
 }
 
 /* Button Styling */

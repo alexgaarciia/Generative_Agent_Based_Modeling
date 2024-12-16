@@ -9,14 +9,16 @@ pages = {
 
 
 # Background styling
-st.markdown(
-    """
-    <style>
-    [data-testid="stAppViewContainer"] {
-        background: radial-gradient(circle at 88% 102%,#3E3EDE, #BEE8DF, #60CAE8, #99B5D5)
-    }
-    </style>
-    """, unsafe_allow_html=True)
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
+
+#st.markdown(
+#    """
+#    <style>
+#    [data-testid="stAppViewContainer"] {
+#        background: radial-gradient(circle at 88% 102%,#3E3EDE, #BEE8DF, #60CAE8, #99B5D5)
+#    }
+#    </style>
+#    """, unsafe_allow_html=True)
 
 
 # Details
@@ -91,16 +93,27 @@ st.markdown(
 )
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-col11, col22, col33 = st.columns([1, 1, 1])
-with col11:
+col1, col2, col3 = st.columns([1, 1, 1])
+with col1:
     st.subheader("What Is GABM?", divider="blue")
-    st.write("Generative Agent-Based Modeling (GABM) combines generative models and agent-based modeling to create realistic simulations of complex systems. By integrating AI-driven agents with a focus on individual behavior, GABM allows for the exploration of interactions and emergent patterns in situations ranging from social networks to ecological models. This approach empowers researchers to simulate various scenarios, understand system dynamics, and predict the outcomes of different interventions.")
+    st.write(
+        """
+        Generative Agent-Based Modeling (GABM) combines generative models and agent-based modeling to create realistic simulations of complex systems.
+        By integrating AI-driven agents with a focus on individual behavior, GABM allows for the exploration of interactions and emergent patterns in situations ranging from social networks to ecological models.
 
-with col22:
+        This approach empowers researchers to simulate various scenarios, understand system dynamics, and predict the outcomes of different interventions.
+        """)
+
+with col2:
     st.subheader("Why This Page?", divider="blue")
-    st.write("This platform is designed to help researchers and users with minimal programming experience create and experiment with generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents, explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.")
+    st.write(
+        """
+        This platform is designed to help researchers and users with minimal programming experience create and experiment with generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents, explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
+        
+        👋 **Hey! Want to know more?** We have stated this concern in [our paper](https://arxiv.org/abs/2411.07038).
+        """)
 
-with col33:
+with col3:
     st.subheader("How Will We Do This?", divider="blue")
     st.write("""
         This platform offers the following key features:
@@ -118,7 +131,6 @@ st.markdown(
     <h1 style="font-size: 50px; text-align: center; margin-top: 150px;">All set to level up your experiments?</h1>
     """, unsafe_allow_html=True)
 
-
 st.markdown(
     """
     <style>
@@ -131,9 +143,7 @@ st.markdown(
     <div class="big-arrow">&#8595;</div> 
     """, unsafe_allow_html=True)
 
-
-# Create a centered row of buttons with reduced space
-_, _, col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  # equal column widths for center alignment
+_, _, col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  # Equal column widths for center alignment
 
 with col1:
     feature_button = st.button("Simulations", use_container_width=True)
@@ -147,5 +157,4 @@ with col2:
         page_file = pages["About Us"]
         st.switch_page(page_file)
 
-# Add line breaks after the buttons
-st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<br><br><br>", unsafe_allow_html=True)  # Add line breaks after the buttons
