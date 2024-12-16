@@ -95,7 +95,7 @@ st.markdown("<br><br>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 1, 1])
 with col1:
-    st.subheader("What Is GABM?", divider="blue")
+    st.subheader("What is GABM?", divider="blue")
     st.write(
         """
         Generative Agent-Based Modeling (GABM) combines generative models and agent-based modeling to create realistic simulations of complex systems.
@@ -105,7 +105,7 @@ with col1:
         """)
 
 with col2:
-    st.subheader("Why This Page?", divider="blue")
+    st.subheader("Why this page?", divider="blue")
     st.write(
         """
         This platform is designed to help researchers and users with minimal programming experience create and experiment with generative agent-based models (GABMs). Leveraging the Concordia framework, this tool makes it easy to build custom agents, explore their attributes, and conduct reliable experiments, all through an accessible and user-friendly interface.
@@ -114,7 +114,7 @@ with col2:
         """)
 
 with col3:
-    st.subheader("How Will We Do This?", divider="blue")
+    st.subheader("How will we do this?", divider="blue")
     st.write("""
         This platform offers the following key features:
 
