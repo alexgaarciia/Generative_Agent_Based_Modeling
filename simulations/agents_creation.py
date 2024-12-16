@@ -1,13 +1,13 @@
 # Import necessary libraries and components
 import random
-import sentence_transformers
+# import sentence_transformers
 import streamlit as st
 from concordia.language_model import gpt_model
 
 # Setup sentence encoder
-st_model = sentence_transformers.SentenceTransformer(
-    'sentence-transformers/all-mpnet-base-v2')
-embedder = lambda x: st_model.encode(x, show_progress_bar=False)
+# st_model = sentence_transformers.SentenceTransformer(
+#     'sentence-transformers/all-mpnet-base-v2')
+# embedder = lambda x: st_model.encode(x, show_progress_bar=False)
 
 # Setup LLM
 GPT_API_KEY = st.session_state.get("api_key", "")

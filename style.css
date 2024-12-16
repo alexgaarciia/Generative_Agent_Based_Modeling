@@ -19,7 +19,7 @@ div.stButton > button {
     display: block;
     margin: 30px auto;  /* Centers the button */
     width: 200px;  /* Adjust width */
-    margin-top: 40px;  /* Adds space between the button and the heading */
+    margin-top: 10px;  /* Adds space between the button and the heading */
     opacity: 0;  /* Initially set the button to be invisible */
     animation: fadeInButton 3s ease-in forwards; /* Fade-in animation for the button */
 }

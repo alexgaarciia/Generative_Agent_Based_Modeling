@@ -2,7 +2,7 @@ import streamlit as st
 from simulations.agents_creation import make_random_formative_ages
 
 # Streamlit app
-st.title("Agent Personalization App")
+st.title("Agent Personalization Page")
 
 # Step 1: Input shared context
 st.subheader("Step 1: Define Shared Context")

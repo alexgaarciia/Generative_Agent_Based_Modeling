@@ -32,7 +32,7 @@ with st.form("simulation_form"):
     # API Key Input
     api_key = st.text_input("Enter your API Key", type="password", help="Your API key is required for running simulations.")
     # Model Selection
-    model_options = ["Select a Model", "Qwen/Qwen2.5-Coder-3B-Instruct-GGUF", "Local LM2", "Local LM3"]
+    model_options = ["Select a Model", "Llama-3.2-3B-Instruct-Q8_0-GGUF", "Local LM2", "Local LM3"]
     selected_model = st.selectbox("Select a Model for Simulation", model_options, help="Choose a model to use for simulations.")
     # Submit Button
     submitted = st.form_submit_button("Submit")
@@ -47,17 +47,16 @@ with st.form("simulation_form"):
 # Validation check only if the model has not been validated
 if st.session_state["api_key"] and st.session_state["selected_model"]:
     if not st.session_state["model_validated"]:
-        st.info("Validating connection with the LLM...")
+        with st.spinner("Validating connection with the LLM.."):
+            # Run validation if not validated yet
+            validation_success = validate_model(st.session_state["api_key"], st.session_state["selected_model"])
 
-        # Run validation if not validated yet
-        validation_success = validate_model(st.session_state["api_key"], st.session_state["selected_model"])
-
-        if validation_success:
-            st.session_state["model_validated"] = True
-            st.success("The model is connected and validated successfully.")
-        else:
-            st.error("Model validation failed. Please check the API key and model name.")
-            st.stop()
+            if validation_success:
+                st.session_state["model_validated"] = True
+                st.success("The model is connected and validated successfully.")
+            else:
+                st.error("Model validation failed. Please check the API key and model name.")
+                st.stop()
     else:
         st.success("Model already validated.")
 
