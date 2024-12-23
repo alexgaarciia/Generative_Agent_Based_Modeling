@@ -270,3 +270,43 @@ def build_agent(agent_config,
   agent.add_component(reputation_metric)
   return agent, mem
 
+
+# Configure and build the players
+if 'agents' not in st.session_state:
+    st.session_state.agents = []
+agents = st.session_state.agents
+
+def create_player_configs(agents):
+    return [
+        formative_memories.AgentConfig(
+            name=agent["name"],
+            gender=agent["gender"],
+            goal=agent["goal"],
+            context=agent["context"],
+            traits=agent["traits"],
+            formative_ages=agent["formative_ages"],
+        )
+        for agent in agents
+    ]
+
+def build_players(player_configs):   
+   num_players = len(player_configs)
+   player_goals = {
+        player_config.name: player_config.goal for player_config in player_configs}
+   players = []
+   memories = {}
+   measurements = measurements_lib.Measurements()
+   
+   player_names = [player.name for player in player_configs][:num_players]
+   with concurrent.futures.ThreadPoolExecutor(max_workers=num_players) as pool:
+    for agent, mem in pool.map(build_agent,
+                                player_configs[:num_players],
+                                # All players get the same `player_names`.
+                                [player_names] * num_players,
+                                # All players get the same `measurements` object.
+                                [measurements] * num_players):
+           players.append(agent)
+           memories[agent.name] = mem
+    
+    return players, memories
+   
