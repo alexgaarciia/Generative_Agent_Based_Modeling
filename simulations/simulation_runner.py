@@ -18,6 +18,7 @@ from concordia.clocks import game_clock
 from concordia.components import game_master as gm_components
 from concordia.environment import game_master
 from concordia.language_model import gpt_model
+from concordia.language_model import mistral_model
 from concordia.metrics import goal_achievement
 from concordia.metrics import common_sense_morality
 from concordia.metrics import opinion_of_others
@@ -33,9 +34,12 @@ embedder = lambda x: st_model.encode(x, show_progress_bar=False)
 
 
 # Setup LLM
-GPT_API_KEY = st.session_state.get("api_key", "")
-GPT_MODEL_NAME = st.session_state.get("selected_model", "")
-model = gpt_model.GptLanguageModel(api_key=GPT_API_KEY, model_name=GPT_MODEL_NAME)
+API_KEY = st.session_state.get("api_key", "")
+MODEL_NAME = st.session_state.get("selected_model", "")
+if MODEL_NAME == "codestral-latest":
+    model = model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+else:
+    model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 
 
 # Configure the generic knowledge of players and GM
@@ -266,18 +270,3 @@ def build_agent(agent_config,
   agent.add_component(reputation_metric)
   return agent, mem
 
-
-# Configure and build the players
-agents = st.session_state["agents"]
-def create_player_configs(agents):
-    return [
-        formative_memories.AgentConfig(
-            name=agent["name"],
-            gender=agent["gender"],
-            goal=agent["goal"],
-            context=agent["context"],
-            traits=agent["traits"],
-            formative_ages=agent["formative_ages"],
-        )
-        for agent in agents
-    ]
