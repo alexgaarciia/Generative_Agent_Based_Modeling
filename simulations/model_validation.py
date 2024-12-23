@@ -6,6 +6,7 @@ validation_dir = Path("./simulations")
 sys.path.append(str(validation_dir))
 
 from concordia.language_model import gpt_model
+from concordia.language_model import mistral_model
 
 def validate_model(api_key, model_name):
     """
@@ -19,7 +20,11 @@ def validate_model(api_key, model_name):
         bool: True if the model connection is successful, False otherwise.
     """
     try:
-        model = gpt_model.GptLanguageModel(api_key=api_key, model_name=model_name)
+        if model_name == "codestral-latest":
+            model = model = mistral_model.MistralLanguageModel(api_key=api_key, model_name=model_name)
+        else:
+            model = gpt_model.GptLanguageModel(api_key=api_key, model_name=model_name)
+            
         model.sample_text("How are you?")
         return True 
     
