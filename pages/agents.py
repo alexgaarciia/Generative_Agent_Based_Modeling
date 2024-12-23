@@ -1,14 +1,17 @@
+import random
 import streamlit as st
-from simulations.agents_creation import make_random_formative_ages
+
 
 # Streamlit app
 st.title("Agent Personalization Page")
+
 
 # Step 1: Input shared context
 st.subheader("Step 1: Define Shared Context")
 shared_context = st.text_area(
     "Provide the shared context for all agents:"
 )
+
 
 # Step 2: Select number of agents
 st.subheader("Step 2: Select Number of Agents")
@@ -25,6 +28,9 @@ if 'form_submitted' not in st.session_state:
     st.session_state.form_submitted = False
 
 # Function to create agent step by step
+def make_random_formative_ages():
+    return sorted(random.sample(range(5, 40), 5))
+
 def create_agent():
     agent_index = st.session_state.current_agent
     st.write(f"**Agent {agent_index + 1}**")
@@ -43,7 +49,7 @@ def create_agent():
         agreeableness = st.selectbox("Agreeableness", [1, 2, 3, 4, 5])
 
         # Formative Ages (random values)
-        formative_ages = make_random_formative_ages
+        formative_ages = make_random_formative_ages()
 
         # Submit button for the form
         submit_button = st.form_submit_button(label="Save Agent")
@@ -81,7 +87,6 @@ if st.session_state.form_submitted:
         for agent in st.session_state.agents:
             st.json(agent)
         st.success("Agents saved successfully!")
-
 else:
     st.subheader("Step 3: Create Agents")
     create_agent()
