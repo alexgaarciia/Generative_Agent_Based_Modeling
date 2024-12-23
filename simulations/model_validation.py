@@ -21,7 +21,7 @@ def validate_model(api_key, model_name):
     """
     try:
         if model_name == "codestral-latest":
-            model = model = mistral_model.MistralLanguageModel(api_key=api_key, model_name=model_name)
+            model = mistral_model.MistralLanguageModel(api_key=api_key, model_name=model_name)
         else:
             model = gpt_model.GptLanguageModel(api_key=api_key, model_name=model_name)
             
