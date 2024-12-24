@@ -309,4 +309,121 @@ def build_players(player_configs):
            memories[agent.name] = mem
     
     return players, memories
-   
+
+
+def build_gm(players, shared_context):
+    game_master_memory = associative_memory.AssociativeMemory(
+    sentence_embedder=embedder,
+    importance=importance_model_gm.importance,
+    clock=clock.now)
+    
+    # Create components of the Game Master
+    player_names = [player.name for player in players]
+
+    scenario_knowledge = generic_components.constant.ConstantComponent(
+        state=' '.join(shared_memories),
+        name='Background')
+
+    time_display=generic_components.report_function.ReportFunction(
+        name='Current time',
+        function=clock.current_time_interval_str)
+
+    player_status = gm_components.player_status.PlayerStatus(
+        clock_now=clock.now,
+        model=model,
+        memory=game_master_memory,
+        player_names=player_names)
+
+    convo_externality = gm_components.conversation.Conversation(
+        players=players,
+        model=model,
+        memory=game_master_memory,
+        clock=clock,
+        burner_memory_factory=blank_memory_factory,
+        components=[player_status],
+        allow_self_talk=True,
+        cap_nonplayer_characters=2,
+        shared_context=shared_context,
+        verbose=True,
+    )
+
+    direct_effect_externality = gm_components.direct_effect.DirectEffect(
+        players=players,
+        model=model,
+        memory=game_master_memory,
+        clock_now=clock.now,
+        verbose=False,
+        components=[player_status]
+    )
+
+    # Create the game master's thought chain
+    account_for_agency_of_others = thought_chains_lib.AccountForAgencyOfOthers(
+        model=model, players=players, verbose=False)
+    thought_chain = [
+        thought_chains_lib.extract_direct_quote,
+        thought_chains_lib.attempt_to_most_likely_outcome,
+        thought_chains_lib.result_to_effect_caused_by_active_player,
+        account_for_agency_of_others,
+        thought_chains_lib.restore_direct_quote,
+    ]
+
+    # Create the game master object
+    env = game_master.GameMaster(
+        model=model,
+        memory=game_master_memory,
+        clock=clock,
+        players=players,
+        update_thought_chain=thought_chain,
+        components=[
+            scenario_knowledge,
+            player_status,
+            convo_externality,
+            direct_effect_externality,
+            time_display,
+        ],
+        randomise_initiative=True,
+        player_observes_event=False,
+        verbose=True,
+    )
+
+    return env
+
+def summary(env, players, memories):
+    # Check if the logs are already stored in session_state
+    if "gm_mem_html" not in st.session_state:
+        all_gm_memories = env._memory.retrieve_recent(k=10000, add_time=True)
+        gm_mem_html = html_lib.PythonObjectToHTMLConverter(all_gm_memories).convert()
+        st.session_state["gm_mem_html"] = gm_mem_html
+
+    if "player_logs" not in st.session_state:
+        player_logs = []
+        player_log_names = []
+
+        for player in players:
+            name = player.name
+            detailed_story = '\n'.join(memories[player.name].retrieve_recent(k=1000, add_time=True))
+            summary = model.sample_text(
+                f'Sequence of events that happened to {name}:\n{detailed_story}'
+                '\nWrite a short story that summarises these events.\n',
+                max_tokens=8000, terminators=())
+
+            all_player_mem = memories[player.name].retrieve_recent(k=1000, add_time=True)
+            all_player_mem = ['Summary:', summary, 'Memories:'] + all_player_mem
+            player_html = html_lib.PythonObjectToHTMLConverter(all_player_mem).convert()
+            player_logs.append(player_html)
+            player_log_names.append(f'{name}')
+
+        # Store the player logs and their names in session_state
+        st.session_state["player_logs"] = player_logs
+        st.session_state["player_log_names"] = player_log_names
+
+    # Use Streamlit selectbox or radio button for tabs
+    selected_tab = st.selectbox("Select a log", ["Game Master"] + st.session_state["player_log_names"])
+
+    # Display the corresponding content for the selected tab
+    if selected_tab == "Game Master":
+        st.markdown(st.session_state["gm_mem_html"], unsafe_allow_html=True)
+    else:
+        # Display the selected player's log
+        player_index = st.session_state["player_log_names"].index(selected_tab)  # Get the index of the selected player
+        st.markdown(st.session_state["player_logs"][player_index], unsafe_allow_html=True)

@@ -2,6 +2,15 @@ import streamlit as st
 from simulations.model_validation import validate_model
 
 
+# Dictionary mapping page names to functions
+pages = {
+    "Details": "./pages/details.py",
+    "Agents Creation": "./pages/agents.py",
+    "Experiment": "./pages/experiment.py",
+    "Agent Confrontation": "./pages/confrontation.py",
+}
+
+
 # Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
@@ -15,15 +24,6 @@ if "selected_model" not in st.session_state:
 
 if "model_validated" not in st.session_state:
     st.session_state["model_validated"] = False
-
-
-# Dictionary mapping page names to functions
-pages = {
-    "Details": "./pages/details.py",
-    "Agents Creation": "./pages/agents.py",
-    "Experiment": "./pages/experiment.py",
-    "Agent Confrontation": "./pages/confrontation.py",
-}
 
 
 # Simulation Configuration

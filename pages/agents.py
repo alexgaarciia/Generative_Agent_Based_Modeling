@@ -3,8 +3,16 @@ import streamlit as st
 from simulations.simulation_runner import create_generic_knowledge
 
 
-# Streamlit app
+# Dictionary mapping page names to functions
+pages = {
+    "Simulations": "./pages/simulations.py",
+}
+
+
+# Page personalization
+st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.title("Agent Personalization Page")
+
 
 # Initialize session state variables
 if "generated_generic_knowledge" not in st.session_state:
@@ -70,7 +78,8 @@ if st.session_state["generated_generic_knowledge"]:
             name = st.text_input(f"Name of Agent {agent_index + 1}:")
             gender = st.selectbox(f"Gender of Agent {agent_index + 1}:", options=["male", "female"])
             goal = st.text_area(f"Goal of Agent {agent_index + 1}:")
-            context = st.text_area(f"Context for Agent {agent_index + 1}:", value=st.session_state["generic_knowledge"],)
+            temp_context = st.text_area(f"Context for Agent {agent_index + 1}:")
+            context = st.session_state["generic_knowledge"] + " " + temp_context
             
             st.subheader(f"Big Five Personality Traits for Agent {agent_index + 1}:")
             extraversion = st.selectbox("Extraversion", [1, 2, 3, 4, 5])
@@ -121,3 +130,14 @@ if st.session_state["generated_generic_knowledge"]:
     else:
         st.markdown("### Step 3: Create Agents")
         create_agent()
+
+
+# "Go Back" Button
+st.markdown("<br>", unsafe_allow_html=True)
+_, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+with col1:
+    home_button = st.button("Go Back", use_container_width=True)
+    if home_button:
+        # Switch to the selected page
+        page_file = pages["Simulations"]
+        st.switch_page(page_file)
