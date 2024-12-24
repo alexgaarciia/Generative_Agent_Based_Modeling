@@ -1,21 +1,20 @@
-# How to run the file
-# streamlit run C:/path_to_main.py/main.py
 import streamlit as st
 
-# Hide the sidebar
-st.set_page_config(page_title="main", layout="wide", initial_sidebar_state="collapsed")
-
-# Load the CSS file and apply the styles
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Dictionary mapping page names to functions
 pages = {
     "Details": "./pages/details.py",
 }
 
-# Header
+
+# Page Personalization
+st.set_page_config(page_title="main", layout="wide", initial_sidebar_state="collapsed")
+
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 st.markdown("""<h1>Ready to explore Generative Agent-Based Modeling?</h1>""", unsafe_allow_html=True)
+
 
 # Button
 details_button = st.button("Let's Go!")
