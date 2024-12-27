@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 # Dictionary mapping page names to functions
 pages = {
     "Home": "main.py",
@@ -36,7 +37,6 @@ with col1:
 
         This approach empowers researchers to simulate various scenarios, understand system dynamics, and predict the outcomes of different interventions.
         """)
-
 with col2:
     st.subheader("Why this page?", divider="blue")
     st.write(
@@ -45,7 +45,6 @@ with col2:
         
         👋 **Hey! Want to know more?** We have stated this concern in [our paper](https://arxiv.org/abs/2411.07038).
         """)
-
 with col3:
     st.subheader("How will we do this?", divider="blue")
     st.write("""
@@ -83,7 +82,6 @@ with col1:
     if feature_button:
         page_file = pages["Simulations"]
         st.switch_page(page_file)
-
 with col2:
     about_us_button = st.button("About Us", use_container_width=True)
     if about_us_button:

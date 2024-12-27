@@ -1,9 +1,6 @@
 # Import necessary libraries and components
 import concurrent.futures
 import datetime
-import random
-import matplotlib.pyplot as plt
-from IPython import display
 import sentence_transformers
 import streamlit as st
 
