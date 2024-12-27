@@ -23,6 +23,7 @@ pages = {
 
 
 # Verify agents
+st.markdown("## Agent Arena")
 if not st.session_state["agents_validated"]:
     with st.spinner("Verifying the existence of agents..."):
         if st.session_state["agents"]:
