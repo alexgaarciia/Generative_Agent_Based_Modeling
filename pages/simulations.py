@@ -16,18 +16,10 @@ st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
 
 # Initialize session state variables
-#if "api_key" not in st.session_state:
-#    st.session_state["api_key"] = None
-
-#if "selected_model" not in st.session_state:
-#    st.session_state["selected_model"] = None
-
 if "api_key" not in st.session_state:
-    st.session_state["api_key"] = "TzOWdUgHo86zZeyANEljS7FJbl5eCCEu"
-
+    st.session_state["api_key"] = None
 if "selected_model" not in st.session_state:
-    st.session_state["selected_model"] = "codestral-latest"
-
+    st.session_state["selected_model"] = None
 if "model_validated" not in st.session_state:
     st.session_state["model_validated"] = False
 
@@ -51,7 +43,7 @@ with st.form("simulation_form"):
 
 
 # Validation check only if the model has not been validated
-st.session_state["model_validated"] = True ################################################# BEWARE
+# st.session_state["model_validated"] = True 
 if st.session_state["api_key"] and st.session_state["selected_model"]:
     if not st.session_state["model_validated"]:
         with st.spinner("Validating connection with the LLM..."):
