@@ -385,7 +385,7 @@ def build_gm(players, shared_context):
 
     return env
 
-def summary(env, players, memories):
+def summary(env, players, memories, selected_player):
     # Check if the logs are already stored in session_state
     if "gm_mem_html" not in st.session_state:
         all_gm_memories = env._memory.retrieve_recent(k=10000, add_time=True)
@@ -414,13 +414,28 @@ def summary(env, players, memories):
         st.session_state["player_logs"] = player_logs
         st.session_state["player_log_names"] = player_log_names
 
-    # Use Streamlit selectbox or radio button for tabs
-    selected_tab = st.selectbox("Select a log", ["Game Master"] + st.session_state["player_log_names"])
+    if not selected_player:
+        # Use Streamlit selectbox or radio button for tabs
+        selected_tab = st.selectbox("Select a log", ["Game Master"] + st.session_state["player_log_names"])
 
-    # Display the corresponding content for the selected tab
-    if selected_tab == "Game Master":
-        st.markdown(st.session_state["gm_mem_html"], unsafe_allow_html=True)
+        # Display the corresponding content for the selected tab
+        if selected_tab == "Game Master":
+            st.markdown(st.session_state["gm_mem_html"], unsafe_allow_html=True)
+        else:
+            # Display the selected player's log
+            player_index = st.session_state["player_log_names"].index(selected_tab) 
+            st.markdown(st.session_state["player_logs"][player_index], unsafe_allow_html=True)
     else:
-        # Display the selected player's log
-        player_index = st.session_state["player_log_names"].index(selected_tab) 
-        st.markdown(st.session_state["player_logs"][player_index], unsafe_allow_html=True)
+        # If there is a selected player, show only their log
+        detailed_story = '\n'.join(memories[selected_player].retrieve_recent(k=1000, add_time=True))
+        summary_text = model.sample_text(
+            f'Sequence of events that happened to {selected_player}:\n{detailed_story}'
+            '\nWrite a short story that summarises these events.\n',
+            max_tokens=8000, terminators=())
+
+        all_player_mem = memories[selected_player].retrieve_recent(k=1000, add_time=True)
+        all_player_mem = ['Summary:', summary_text, 'Memories:'] + all_player_mem
+        player_html = html_lib.PythonObjectToHTMLConverter(all_player_mem).convert()
+
+        # Display the selected player's memory and summary
+        st.markdown(player_html, unsafe_allow_html=True)
