@@ -422,5 +422,5 @@ def summary(env, players, memories):
         st.markdown(st.session_state["gm_mem_html"], unsafe_allow_html=True)
     else:
         # Display the selected player's log
-        player_index = st.session_state["player_log_names"].index(selected_tab)  # Get the index of the selected player
+        player_index = st.session_state["player_log_names"].index(selected_tab) 
         st.markdown(st.session_state["player_logs"][player_index], unsafe_allow_html=True)
