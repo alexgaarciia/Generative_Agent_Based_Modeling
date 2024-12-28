@@ -38,7 +38,10 @@ if not st.session_state["agents_validated"]:
                     st.switch_page(page_file)
                     st.stop()
 else:
-    # Show 3 possible options of agent confrontation in case of agent existance
+    st.session_state["agents_validated"] = True
+
+if st.session_state["agents_validated"]:
+    # Show 3 possible options of agent confrontation
     col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
         if st.button("Confront Agents of My Choice", use_container_width=True):
