@@ -1,3 +1,4 @@
+import json
 import random
 import streamlit as st
 from simulations.simulation_runner import create_generic_knowledge
@@ -122,11 +123,18 @@ if st.session_state["generated_generic_knowledge"]:
     # Display and save agents after all are created
     if st.session_state.form_submitted:
         st.markdown("### Step 4: Review and Save Agents")
-        if st.button("Save Agents"):
+        _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+        with col1:
+            if st.button("Save Agents"):
+                # Save agents to a JSON file
+                with open("agents.json", "w") as f:
+                    json.dump(st.session_state.agents, f, indent=4)
+                st.success("Agents saved successfully!")
+                
+        if st.session_state.agents:
             st.write("**Saved Agents:**")
             for agent in st.session_state.agents:
                 st.json(agent)
-            st.success("Agents saved successfully!")
     else:
         st.markdown("### Step 3: Create Agents")
         create_agent()
