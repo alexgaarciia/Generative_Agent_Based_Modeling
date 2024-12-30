@@ -1,24 +1,166 @@
 import streamlit as st
+from simulations.simulation_runner import *
+from simulations.agent_similarity import *
+
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
 
+# Initialize the "new_simulation" key if it doesn't exist
+if "new_simulation2" not in st.session_state:
+    st.session_state["new_simulation2"] = False
+
+
 # Dictionary mapping page names to functions
 pages = {
-    "Confrontation Main Page": "./pages/confrontation.py",
+    "Simulations": "./pages/simulations.py",
+    "confrontation2": "./pages/confrontation_similar.py",
+    "Agents": "./pages/agents.py",
 }
 
 
-# Key Features Section
-st.markdown("## Under Construction")
+# Simulation Configuration
+st.markdown("## Agent Confrontation Based On Similarity")
 
 
-# Buttons
+# Reset simulation when "New Simulation" is clicked
+if "new_simulation2" in st.session_state and st.session_state["new_simulation2"]:
+    st.session_state["players_confrontation2"] = None
+    st.session_state["memories_confrontation2"] = None
+    st.session_state["gm_confrontation2"] = None
+    st.session_state["new_simulation2"] = False  
+
+
+# Ensure players and memories are only built once (not every reload)
+if "agents" in st.session_state and st.session_state["agents"]:
+    with st.spinner("Calculating agent similarities..."):
+        similarity_matrix = compute_agent_similarity(st.session_state["agents"])
+        most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
+
+    agent_names = [agent["name"] for agent in st.session_state["agents"]]
+    most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])
+    most_different_agents = (agent_names[most_different[0]], agent_names[most_different[1]])
+
+    col1, col2 = st.columns(2)
+    # Display the most similar pair
+    with col1:
+        st.markdown("### Most Similar Pair")
+        st.write(f"**{most_similar_agents[0]}** and **{most_similar_agents[1]}**")
+
+    # Display the most different pair
+    with col2:
+        st.markdown("### Most Different Pair")
+        st.write(f"**{most_different_agents[0]}** and **{most_different_agents[1]}**")
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    with st.form(key="interaction_goal_form"):
+        selected_pair = st.radio(
+        "Select the pair for confrontation:",
+        options=[
+            f"Most Similar Pair: {most_similar_agents[0]} and {most_similar_agents[1]}",
+            f"Most Different Pair: {most_different_agents[0]} and {most_different_agents[1]}"]
+        )
+        
+        interaction_goal = st.text_area(
+            "Specify the goal of the interaction:",
+            placeholder="e.g., Discuss about the impact of fake news in social media."
+        )
+
+        submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        # Reset players and memories when selecting a new pair
+        if "players_confrontation2" in st.session_state:
+            del st.session_state["players_confrontation2"]
+        if "memories_confrontation2" in st.session_state:
+            del st.session_state["memories_confrontation2"]
+        if "gm_confrontation2" in st.session_state:
+            del st.session_state["gm_confrontation2"]
+
+        # Extract selected players
+        if "Most Similar Pair" in selected_pair:
+            player1, player2 = most_similar_agents
+            
+        else:
+            player1, player2 = most_different_agents
+        
+        st.session_state["player1"] = player1
+        st.session_state["player2"] = player2
+
+        if not interaction_goal:
+            st.error("Please specify the goal of the interaction before proceeding.")
+        else:
+            # Only rebuild players and memories if they haven't been created already
+            if "players_confrontation2" not in st.session_state or "memories_confrontation2" not in st.session_state:
+                with st.spinner("Building players and memories, this may take a while..."):
+                    player_configs = create_player_configs(st.session_state["agents"])
+                    players, memories = build_players(player_configs)
+                    st.session_state["players_confrontation2"] = players
+                    st.session_state["memories_confrontation2"] = memories
+                    st.success("Players and memories built successfully!")
+        
+            selected_players = [player for player in st.session_state["players_confrontation2"] if player.name in [player1, player2]]
+
+            # Build a new Game Master for this confrontation only if necessary
+            if "gm_confrontation2" not in st.session_state or st.session_state["gm_confrontation2"] is None:
+                with st.spinner("Building Game Master for confrontation..."):
+                    confrontation_premise = f"{player1} and {player2} are in a conversation. The goal of their interaction is: {interaction_goal}."
+                    st.session_state["gm_confrontation2"] = build_gm(
+                        players=selected_players, 
+                        shared_context=st.session_state.get("generic_knowledge", "") + " " + confrontation_premise
+                    )
+                    st.success("Game Master for confrontation built successfully!")
+
+            # Run the simulation only after Game Master is built and if it's not a new simulation
+            if st.session_state.get("gm_confrontation2") and not st.session_state["new_simulation2"]:
+                with st.spinner("Running confrontation simulation..."):
+                    for _ in range(4):
+                        st.session_state["gm_confrontation2"].step()
+                    st.success("Confrontation simulation completed!")
+                    st.markdown("<br>", unsafe_allow_html=True)
+else:
+    st.error("Agent confrontation cannot start because no agents have been defined. Please refer to the button below to create them.")
+    _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+    with col1:
+        if st.button("Create Agents", use_container_width=True):
+            # Switch to the selected page
+            page_file = pages["Agents"]
+            st.switch_page(page_file)
+
+
+# After the confrontation simulation, show the memory logs and summaries
 st.markdown("<br>", unsafe_allow_html=True)
-_, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+if "memories_confrontation2" in st.session_state and st.session_state["memories_confrontation2"] is not None:
+    # Extract player names dynamically from the session state
+    confronted_player_names = [st.session_state["player1"], st.session_state["player2"]]
+
+    # Extract player names for memory log display
+    selected_player = st.selectbox("Select Player for Memory Log:", options=confronted_player_names)
+
+    # Only show the memory log and summary after the confrontation is done
+    if selected_player:
+        st.markdown(f"### {selected_player}'s Summary:")
+        player_memories = st.session_state["memories_confrontation2"].get(selected_player, [])
+        summary(st.session_state.get("gm_confrontation2"), 
+                [player for player in st.session_state["players_confrontation2"] if player.name == selected_player], 
+                {selected_player: player_memories}, 
+                selected_player=selected_player)
+
+
+# Buttons for navigation
+st.markdown("<br>", unsafe_allow_html=True)
+_, _ , col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  
+
 with col1:
     home_button = st.button("Go Back", use_container_width=True)
     if home_button:
         # Switch to the selected page
-        page_file = pages["Confrontation Main Page"]
+        page_file = pages["Simulations"]
+        st.switch_page(page_file)
+
+with col2:
+    if st.button("New Confrontation", use_container_width=True):
+        # Mark new simulation flag and reload the page
+        st.session_state["new_simulation2"] = True
+        page_file = pages["confrontation2"]
         st.switch_page(page_file)
