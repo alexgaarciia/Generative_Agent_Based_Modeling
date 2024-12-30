@@ -1,5 +1,4 @@
 import streamlit as st
-from simulations.simulation_runner import *
 
 
 # Page personalization
@@ -51,6 +50,7 @@ if not st.session_state["agents_validated"]:
 
 # Step 2: Building players
 if st.session_state["agents_validated"] and not st.session_state["players_built"]:
+    from simulations.simulation_runner import *  # Some imports take time; moved import here so that it is faster in case of inexistence of agents
     with st.spinner("Building players, this may take a while..."):
         player_configs = create_player_configs(st.session_state["agents"])
         players, memories = build_players(player_configs)

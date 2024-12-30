@@ -7,7 +7,8 @@ pages = {
     "Details": "./pages/details.py",
     "Agents Creation": "./pages/agents.py",
     "Experiment": "./pages/experiment.py",
-    "Agent Confrontation": "./pages/confrontation.py",
+    "confrontation1": "./pages/confrontation_personalized.py",
+    "confrontation2": "./pages/confrontation_similar.py"
 }
 
 
@@ -63,21 +64,24 @@ if st.session_state["api_key"] and st.session_state["selected_model"]:
     if st.session_state["model_validated"]:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("### Select a Simulation Option")
-        col1, col2, col3 = st.columns(3)
+
+        col1, col2 = st.columns(2)
+        col3, col4 = st.columns(2)
         with col1:
-            agents_creation_button = st.button("👤 Create Agents 👤")
-            if agents_creation_button:
+            if  st.button("👤 Create Agents 👤", use_container_width=True):
                 page_file = pages["Agents Creation"]
                 st.switch_page(page_file)
         with col2:
-            simulation_button = st.button("⚗️ Run Experiments ⚗️")
-            if simulation_button:
+            if st.button("⚗️ Run Experiments ⚗️", use_container_width=True):
                 page_file = pages["Experiment"]
                 st.switch_page(page_file)
         with col3:
-            confrontation_button = st.button("🤼‍♂️ Agent Confrontation 🤼‍♂️")
-            if confrontation_button:
-                page_file = pages["Agent Confrontation"]
+            if st.button("🤼‍♂️ Confront Agents of My Choice 🤼‍♂️", use_container_width=True):
+                page_file = pages["confrontation1"]
+                st.switch_page(page_file)
+        with col4:
+            if st.button("🟰 Confront Similar/Different Agents 🟰", use_container_width=True):
+                page_file = pages["confrontation2"]
                 st.switch_page(page_file)
 else:
     st.warning("Please enter your API key and select a model to proceed.")
