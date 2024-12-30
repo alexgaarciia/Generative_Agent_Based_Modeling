@@ -1,11 +1,14 @@
 import streamlit as st
 from simulations.simulation_runner import *
 
+
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
+
 
 # Initialize the "new_simulation" key if it doesn't exist
 if "new_simulation" not in st.session_state:
     st.session_state["new_simulation"] = False
+
 
 # Dictionary mapping page names to functions
 pages = {
@@ -14,8 +17,10 @@ pages = {
     "Agents": "./pages/agents.py",
 }
 
+
 # Simulation Configuration
 st.markdown("## Interact with Specific Agents")
+
 
 # Reset simulation when "New Simulation" is clicked
 if "new_simulation" in st.session_state and st.session_state["new_simulation"]:
@@ -23,6 +28,7 @@ if "new_simulation" in st.session_state and st.session_state["new_simulation"]:
     st.session_state["memories_confrontation"] = None
     st.session_state["gm_confrontation"] = None
     st.session_state["new_simulation"] = False  
+
 
 # Ensure players and memories are only built once (not every reload)
 if "agents" in st.session_state and st.session_state["agents"]:
@@ -75,7 +81,8 @@ if "agents" in st.session_state and st.session_state["agents"]:
                 # Run the simulation only after Game Master is built and if it's not a new simulation
                 if st.session_state.get("gm_confrontation") and not st.session_state["new_simulation"]:
                     with st.spinner("Running confrontation simulation..."):
-                        st.session_state["gm_confrontation"].step()
+                        for _ in range(4):
+                            st.session_state["gm_confrontation"].step()
                         st.success("Confrontation simulation completed!")
                         st.markdown("<br>", unsafe_allow_html=True)
 
