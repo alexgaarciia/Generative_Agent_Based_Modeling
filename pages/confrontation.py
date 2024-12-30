@@ -18,7 +18,6 @@ pages = {
     "Agents": "./pages/agents.py",
     "confrontation1": "./pages/confrontation_personalized.py",
     "confrontation2": "./pages/confrontation_similar.py",
-    "confrontation3": "./pages/confrontation_different.py",
 }
 
 
@@ -42,18 +41,14 @@ else:
 
 if st.session_state["agents_validated"]:
     # Show 3 possible options of agent confrontation
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("Confront Agents of My Choice", use_container_width=True):
             page_file = pages["confrontation1"]
             st.switch_page(page_file)
     with col2:
-        if st.button("Confront Similar Agents", use_container_width=True):
+        if st.button("Confront Agents Based on Similarity or Dissimilarity", use_container_width=True):
             page_file = pages["confrontation2"]
-            st.switch_page(page_file)
-    with col3:
-        if st.button("Confront Different Agents", use_container_width=True):
-            page_file = pages["confrontation3"]
             st.switch_page(page_file)
 
 
