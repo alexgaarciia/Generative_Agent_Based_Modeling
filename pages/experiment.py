@@ -6,6 +6,8 @@ st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
 
 # Initialize session state variables
+if "begin_simulation" not in st.session_state:
+    st.session_state["begin_simulation"] = False
 if "agents" not in st.session_state:
     st.session_state["agents"] = []
 if "memories" not in st.session_state:
@@ -49,8 +51,14 @@ if not st.session_state["agents_validated"]:
                     st.switch_page(page_file)
 
 # Step 2: Building players
-if st.session_state["agents_validated"] and not st.session_state["players_built"]:
-    from simulations.simulation_runner import *  # Some imports take time; moved import here so that it is faster in case of inexistence of agents
+_, col1, _ = st.columns([1, 1, 1])  
+with col1:
+    if st.button("Begin Simulation", use_container_width=True):
+        st.session_state["begin_simulation"] = True
+
+from simulations.simulation_runner import *  # Some imports take time; moved import here so that it is faster in case of inexistence of agents
+
+if st.session_state["begin_simulation"] and st.session_state["agents_validated"] and not st.session_state["players_built"]:
     with st.spinner("Building players, this may take a while..."):
         player_configs = create_player_configs(st.session_state["agents"])
         players, memories = build_players(player_configs)
@@ -70,7 +78,7 @@ if st.session_state["players_built"] and not st.session_state["gm_built"]:
 # Step 4: Run the simulation
 if st.session_state["gm_built"]:
     episode_length = st.number_input("Enter the number of episodes", min_value=4, value=4, max_value=12, step=1)
-    _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+    _, _, col1, _, _ = st.columns([1, 1, 1, 1, 1])  
     with col1:
         if st.button("Run Simulation"):
             with st.spinner(f"Running {episode_length} episodes..."):
