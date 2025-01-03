@@ -32,7 +32,7 @@ with st.form("simulation_form"):
     api_key = st.text_input("Enter your API Key", type="password", help="Your API key is required for running simulations.")
 
     # Model Selection
-    model_options = ["Select a Model", "ChatGPT-4-turbo", "ChatGPT-3.5-turbo", "codestral-latest"]
+    model_options = ["Select a Model", "gpt-4", "gpt-3.5-turbo", "codestral-latest"]
     selected_model = st.selectbox("Select a Model for Simulation", model_options, help="Choose a model to use for simulations.")
 
     # Submit Button
