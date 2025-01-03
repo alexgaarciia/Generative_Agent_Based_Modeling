@@ -30,9 +30,11 @@ st.markdown("### LLM Configuration")
 with st.form("simulation_form"):
     # API Key Input
     api_key = st.text_input("Enter your API Key", type="password", help="Your API key is required for running simulations.")
+
     # Model Selection
-    model_options = ["Select a Model", "Llama-3.2-3B-Instruct-Q8_0-GGUF", "codestral-latest", "Local LM3"]
+    model_options = ["Select a Model", "ChatGPT-4-turbo", "ChatGPT-3.5-turbo", "codestral-latest"]
     selected_model = st.selectbox("Select a Model for Simulation", model_options, help="Choose a model to use for simulations.")
+
     # Submit Button
     submitted = st.form_submit_button("Submit")
 
