@@ -1,14 +1,10 @@
+import copy
 import streamlit as st
 from simulations.simulation_runner import *
 from simulations.agent_similarity import *
 
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
-
-
-# Initialize the "new_simulation" key if it doesn't exist
-if "new_simulation2" not in st.session_state:
-    st.session_state["new_simulation2"] = False
 
 
 # Dictionary mapping page names to functions
@@ -21,14 +17,6 @@ pages = {
 
 # Simulation Configuration
 st.markdown("## Agent Confrontation Based On Similarity")
-
-
-# Reset simulation when "New Simulation" is clicked
-if "new_simulation2" in st.session_state and st.session_state["new_simulation2"]:
-    st.session_state["players_confrontation2"] = None
-    st.session_state["memories_confrontation2"] = None
-    st.session_state["gm_confrontation2"] = None
-    st.session_state["new_simulation2"] = False  
 
 
 # Ensure players and memories are only built once (not every reload)
@@ -90,6 +78,12 @@ if "agents" in st.session_state and st.session_state["agents"]:
         if not interaction_goal:
             st.error("Please specify the goal of the interaction before proceeding.")
         else:
+            # Update agent goals dynamically
+            agents_copy = copy.deepcopy(st.session_state.get("updated_agents", st.session_state["agents"]))
+            for agent in agents_copy:
+                if agent["name"] in [player1, player2]:
+                    agent["goal"] = interaction_goal
+
             # Only rebuild players and memories if they haven't been created already
             if "players_confrontation2" not in st.session_state or "memories_confrontation2" not in st.session_state:
                 with st.spinner("Building players and memories, this may take a while..."):
@@ -112,9 +106,9 @@ if "agents" in st.session_state and st.session_state["agents"]:
                     st.success("Game Master for confrontation built successfully!")
 
             # Run the simulation only after Game Master is built and if it's not a new simulation
-            if st.session_state.get("gm_confrontation2") and not st.session_state["new_simulation2"]:
+            if st.session_state.get("gm_confrontation2"):
                 with st.spinner("Running confrontation simulation..."):
-                    for _ in range(4):
+                    for _ in range(1):
                         st.session_state["gm_confrontation2"].step()
                     st.success("Confrontation simulation completed!")
                     st.markdown("<br>", unsafe_allow_html=True)
@@ -127,6 +121,18 @@ else:
             page_file = pages["Agents"]
             st.switch_page(page_file)
 
+
+# Buttons for navigation
+st.markdown("<br>", unsafe_allow_html=True)
+_, _ , col1, _, _ = st.columns([1, 1, 1, 1, 1])  
+
+with col1:
+    home_button = st.button("Go Back", use_container_width=True)
+    if home_button:
+        # Switch to the selected page
+        page_file = pages["Simulations"]
+        st.switch_page(page_file)
+        
 
 # After the confrontation simulation, show the memory logs and summaries
 st.markdown("<br>", unsafe_allow_html=True)
@@ -145,22 +151,3 @@ if "memories_confrontation2" in st.session_state and st.session_state["memories_
                 [player for player in st.session_state["players_confrontation2"] if player.name == selected_player], 
                 {selected_player: player_memories}, 
                 selected_player=selected_player)
-
-
-# Buttons for navigation
-st.markdown("<br>", unsafe_allow_html=True)
-_, _ , col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  
-
-with col1:
-    home_button = st.button("Go Back", use_container_width=True)
-    if home_button:
-        # Switch to the selected page
-        page_file = pages["Simulations"]
-        st.switch_page(page_file)
-
-with col2:
-    if st.button("New Confrontation", use_container_width=True):
-        # Mark new simulation flag and reload the page
-        st.session_state["new_simulation2"] = True
-        page_file = pages["confrontation2"]
-        st.switch_page(page_file)

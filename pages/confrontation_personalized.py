@@ -100,7 +100,7 @@ if "agents" in st.session_state and st.session_state["agents"]:
                 # Run the simulation only after Game Master is built and if it's not a new simulation
                 if st.session_state.get("gm_confrontation"):
                     with st.spinner("Running confrontation simulation..."):
-                        for _ in range(1):
+                        for _ in range(4):
                             st.session_state["gm_confrontation"].step()
                         st.success("Confrontation simulation completed!")
                         st.markdown("<br>", unsafe_allow_html=True)
