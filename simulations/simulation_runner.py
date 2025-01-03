@@ -385,7 +385,7 @@ def build_gm(players, shared_context):
 
     return env
 
-def summary(env, players, memories, selected_player):
+def summary(env, players, memories, selected_player=False):
     # Check if the logs are already stored in session_state
     if "gm_mem_html" not in st.session_state:
         all_gm_memories = env._memory.retrieve_recent(k=10000, add_time=True)
@@ -414,7 +414,7 @@ def summary(env, players, memories, selected_player):
         st.session_state["player_logs"] = player_logs
         st.session_state["player_log_names"] = player_log_names
 
-    if not selected_player:
+    if selected_player==False:
         # Use Streamlit selectbox or radio button for tabs
         selected_tab = st.selectbox("Select a log", ["Game Master"] + st.session_state["player_log_names"])
 
