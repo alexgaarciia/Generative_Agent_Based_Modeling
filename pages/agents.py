@@ -58,6 +58,7 @@ if st.session_state["generated_generic_knowledge"]:
     num_agents = st.slider(
         "Select the number of agents (4 to 6):", min_value=4, max_value=6, value=4
     )
+    st.session_state["num_agents"] = num_agents
 
     # Initialize agent list and current step
     if 'agents' not in st.session_state:
