@@ -86,6 +86,7 @@ def build_agent(agent_config,
   mem = formative_memory_factory.make_memories(agent_config)
 
   agent_name = agent_config.name
+
   instructions = generic_components.constant.ConstantComponent(
       state=(
           f'The instructions for how to play the role of {agent_name} are as '
@@ -114,12 +115,14 @@ def build_agent(agent_config,
       timeframe=clock.get_step_size(),
       component_name='current observations',
   )
+
   somatic_state = components.somatic_state.SomaticState(
       model=model,
       memory=mem,
       agent_name=agent_config.name,
       clock_now=clock.now,
   )
+
   summary_obs = components.observation.ObservationSummary(
       agent_name=agent_config.name,
       model=model,
@@ -138,6 +141,7 @@ def build_agent(agent_config,
       agent_name=agent_config.name,
       clock_now=clock.now,
   )
+
   relevant_memories = components.all_similar_memories.AllSimilarMemories(
       name='relevant memories',
       model=model,
@@ -148,6 +152,7 @@ def build_agent(agent_config,
       num_memories_to_retrieve=25,
       verbose=False,
   )
+
   situation_perception = components.situation_perception.SituationPerception(
       name=(f'answer to what kind of situation is {agent_config.name} in ' +
             'right now'),
@@ -157,6 +162,7 @@ def build_agent(agent_config,
       components=[current_obs, somatic_state, summary_obs],
       clock_now=clock.now,
   )
+
   person_by_situation = components.person_by_situation.PersonBySituation(
       name=(f'answer to what would a person like {agent_config.name} do in a ' +
             'situation like this'),
@@ -178,6 +184,7 @@ def build_agent(agent_config,
   )
 
   justification_components = components.justify_recent_voluntary_actions
+
   justification = justification_components.JustifyRecentVoluntaryActions(
       name='justification',
       model=model,
@@ -187,6 +194,7 @@ def build_agent(agent_config,
       clock_now=clock.now,
       verbose=True,
   )
+
   reflection = components.dialectical_reflection.DialecticalReflection(
       name='reflection',
       model=model,
@@ -201,6 +209,7 @@ def build_agent(agent_config,
 
   initial_goal_component = generic_components.constant.ConstantComponent(
       state=agent_config.goal, name='overarching goal')
+  
   plan = components.plan.SimPlan(
       model,
       mem,
@@ -226,6 +235,7 @@ def build_agent(agent_config,
       channel='goal_achievement',
       verbose=False,
   )
+
   morality_metric = common_sense_morality.CommonSenseMoralityMetric(
       model=model,
       player_name=agent_config.name,
@@ -235,6 +245,7 @@ def build_agent(agent_config,
       measurements=measurements,
       channel='common_sense_morality',
   )
+
   agent = basic_agent.BasicAgent(
       model,
       agent_name=agent_config.name,
@@ -252,6 +263,7 @@ def build_agent(agent_config,
                   morality_metric],
       update_interval = TIME_STEP
   )
+
   reputation_metric = opinion_of_others.OpinionOfOthersMetric(
       model=model,
       player_name=agent_config.name,
@@ -264,6 +276,7 @@ def build_agent(agent_config,
       channel='opinion_of_others',
       question='What is {opining_player}\'s opinion of {of_player}?',
   )
+
   agent.add_component(reputation_metric)
   return agent, mem
 
@@ -308,6 +321,7 @@ def build_players(player_configs):
     return players, memories
 
 
+# Configure and build the GM
 def build_gm(players, shared_context):
     game_master_memory = associative_memory.AssociativeMemory(
     sentence_embedder=embedder,
@@ -385,6 +399,8 @@ def build_gm(players, shared_context):
 
     return env
 
+
+# Create a summary of the conversation
 def summary(env, players, memories, selected_player=False):
     # Check if the logs are already stored in session_state
     if "gm_mem_html" not in st.session_state:
