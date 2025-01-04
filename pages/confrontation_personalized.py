@@ -28,8 +28,6 @@ if "agents" in st.session_state and st.session_state["agents"]:
         agents_data.append({
             "Name": agent["name"],
             "Gender": agent["gender"],
-            "Goal": agent["goal"],
-            "Context": agent["context"],
             "Traits": traits_summary
         })
 
@@ -77,6 +75,7 @@ if "agents" in st.session_state and st.session_state["agents"]:
                 for agent in agents_copy:
                     if agent["name"] in [player1, player2]:
                         agent["goal"] = interaction_goal
+                        agent["context"] = interaction_goal
 
                 # Rebuild players and memories (it is better to rebuild them, otherwise memories of previous conversations will be kept)
                 with st.spinner("Building players and memories..."):

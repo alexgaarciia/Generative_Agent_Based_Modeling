@@ -83,11 +83,12 @@ if "agents" in st.session_state and st.session_state["agents"]:
             for agent in agents_copy:
                 if agent["name"] in [player1, player2]:
                     agent["goal"] = interaction_goal
+                    agent["context"] = interaction_goal
 
             # Only rebuild players and memories if they haven't been created already
             if "players_confrontation2" not in st.session_state or "memories_confrontation2" not in st.session_state:
                 with st.spinner("Building players and memories, this may take a while..."):
-                    player_configs = create_player_configs(st.session_state["agents"])
+                    player_configs = create_player_configs(agents_copy)
                     players, memories = build_players(player_configs)
                     st.session_state["players_confrontation2"] = players
                     st.session_state["memories_confrontation2"] = memories
