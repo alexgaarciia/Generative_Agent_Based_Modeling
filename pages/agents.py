@@ -129,9 +129,9 @@ if st.session_state["generated_generic_knowledge"]:
                 # Save agents to a JSON file
                 with open("agents.json", "w") as f:
                     json.dump(st.session_state.agents, f, indent=4)
-                st.success("Agents saved successfully!")
                 
         if st.session_state.agents:
+            st.success("Agents saved successfully!")
             st.write("**Saved Agents:**")
             for agent in st.session_state.agents:
                 st.json(agent)
