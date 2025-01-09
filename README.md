@@ -1,4 +1,4 @@
-![Python Version](https://img.shields.io/badge/python-3.12.4-blue)
+<!--![Python Version](https://img.shields.io/badge/python-3.12.4-blue)-->
 
 # ConcordiaSims
 This project aims to make agentic AI equally accessible to users and researchers, particularly those without advanced technological expertise, enabling them to gain deeper insights into its interactions and decision-making processes.
