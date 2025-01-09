@@ -4,6 +4,7 @@ import streamlit as st
 from simulations.simulation_runner import *
 
 
+# Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
 
@@ -94,19 +95,10 @@ if "agents" in st.session_state and st.session_state["agents"]:
                         players=selected_players, 
                         shared_context=st.session_state.get("generic_knowledge", "") + " " + confrontation_premise
                     )
-                    st.success("Game Master for confrontation built successfully!")
-
-                # Run the simulation only after Game Master is built and if it's not a new simulation
-                if st.session_state.get("gm_confrontation"):
-                    with st.spinner("Running confrontation simulation..."):
-                        for _ in range(4):
-                            st.session_state["gm_confrontation"].step()
-                        st.success("Confrontation simulation completed!")
-                        st.markdown("<br>", unsafe_allow_html=True)
-
+                    st.success("Game Master built successfully!")
 else:
     st.error("Agent confrontation cannot start because no agents have been defined. Please refer to the button below to create them.")
-    _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+    _, _ , col1, _, _ = st.columns([1, 1, 1, 1, 1])  
     with col1:
         if st.button("Create Agents", use_container_width=True):
             # Switch to the selected page
@@ -114,8 +106,19 @@ else:
             st.switch_page(page_file)
 
 
+# Run the simulation only after Game Master is built and if it's not a new simulation
+if st.session_state.get("gm_confrontation"):
+    episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=20, step=1)
+    _, _, col1, _, _ = st.columns([1, 1, 1, 1, 1])  
+    with col1:
+        if st.button("Run Simulation"):
+            with st.spinner(f"Running {episode_length} episodes..."):
+                for _ in range(episode_length):
+                    st.session_state["gm_confrontation"].step()
+                st.session_state["simulation_completed"] = True
+
+
 # Buttons for navigation
-st.markdown("<br>", unsafe_allow_html=True)
 _, _ , col1, _, _ = st.columns([1, 1, 1, 1, 1])  
 
 with col1:
@@ -128,7 +131,7 @@ with col1:
 
 # After the confrontation simulation, show the memory logs and summaries
 st.markdown("<br>", unsafe_allow_html=True)
-if "memories_confrontation" in st.session_state and st.session_state["memories_confrontation"] is not None:
+if "simulation_completed" in st.session_state and st.session_state["simulation_completed"] is not None:
     # Extract player names for memory log display
     selected_player = st.selectbox("Select Player for Memory Log:", options=player_names)
 

@@ -4,6 +4,7 @@ from simulations.simulation_runner import *
 from simulations.agent_similarity import *
 
 
+# Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
 
@@ -17,6 +18,12 @@ pages = {
 
 # Simulation Configuration
 st.markdown("## Agent Confrontation Based On Similarity")
+
+
+import json
+with open('agents.json', 'r') as f:
+    agents = json.load(f)
+st.session_state["agents"] = agents
 
 
 # Ensure players and memories are only built once (not every reload)
@@ -104,15 +111,7 @@ if "agents" in st.session_state and st.session_state["agents"]:
                         players=selected_players, 
                         shared_context=st.session_state.get("generic_knowledge", "") + " " + confrontation_premise
                     )
-                    st.success("Game Master for confrontation built successfully!")
-
-            # Run the simulation only after Game Master is built and if it's not a new simulation
-            if st.session_state.get("gm_confrontation2"):
-                with st.spinner("Running confrontation simulation..."):
-                    for _ in range(4):
-                        st.session_state["gm_confrontation2"].step()
-                    st.success("Confrontation simulation completed!")
-                    st.markdown("<br>", unsafe_allow_html=True)
+                    st.success("Game Master built successfully!")
 else:
     st.error("Agent confrontation cannot start because no agents have been defined. Please refer to the button below to create them.")
     _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
@@ -123,8 +122,19 @@ else:
             st.switch_page(page_file)
 
 
+# Run the simulation only after Game Master is built and if it's not a new simulation
+if st.session_state.get("gm_confrontation2"):
+    episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=20, step=1)
+    _, _, col1, _, _ = st.columns([1, 1, 1, 1, 1])  
+    with col1:
+        if st.button("Run Simulation"):
+            with st.spinner("Running confrontation simulation..."):
+                for _ in range(episode_length):
+                    st.session_state["gm_confrontation2"].step()
+                st.session_state["simulation_completed2"] = True
+
+
 # Buttons for navigation
-st.markdown("<br>", unsafe_allow_html=True)
 _, _ , col1, _, _ = st.columns([1, 1, 1, 1, 1])  
 
 with col1:
@@ -137,7 +147,7 @@ with col1:
 
 # After the confrontation simulation, show the memory logs and summaries
 st.markdown("<br>", unsafe_allow_html=True)
-if "memories_confrontation2" in st.session_state and st.session_state["memories_confrontation2"] is not None:
+if "simulation_completed2" in st.session_state and st.session_state["simulation_completed2"] is not None:
     # Extract player names dynamically from the session state
     confronted_player_names = [st.session_state["player1"], st.session_state["player2"]]
 
