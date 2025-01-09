@@ -18,9 +18,13 @@ st.markdown(
     """
     <div style="text-align: center;">
         <h1 style="font-size: 50px;">
-            IT'S NOT JUST AI,<br>IT'S ANOTHER LEVEL,<br>IT'S 
-            <span style="font-weight: bold; color: blue; font-style: italic;">GABM</span>
+            WELCOME TO THE<br>
+            <span style="font-weight: bold; color: blue; font-style: italic;">AGENTIC</span>
+            ERA
         </h1>
+        <p style="font-size: 20px; color: #555555; margin-top: 10px;">
+            Where Simulations Come Alive with Intelligent Agents
+        </p>
     </div>
     """,
     unsafe_allow_html=True
@@ -53,7 +57,7 @@ with col3:
         - **Create Custom Agents:** Design virtual agents with unique attributes and characteristics.
         - **Simulation Design:** Run simulations to observe and analyze agent behaviors and interactions within various scenarios.
         - **Display Agent Information:** Access and review detailed information about each created agent.
-        - **Compare Personalities and Ideologies:** Contrast agents with similar or differing political and ideological profiles.
+        - **Compare Personalities and Ideologies:** Contrast agents with similar or differing personalities, political, and ideological profiles.
         """)
 
 
