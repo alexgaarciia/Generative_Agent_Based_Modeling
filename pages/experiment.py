@@ -33,10 +33,8 @@ pages = {
 }
 
 
-# Simulations 
+# Verify existence of agents
 st.markdown("## Simulation Area")
-
-# Step 1: Verifying agents
 if not st.session_state["agents_validated"]:
     with st.spinner("Verifying the existence of agents..."):
         if st.session_state["agents"]:
@@ -50,7 +48,8 @@ if not st.session_state["agents_validated"]:
                     page_file = pages["Agents"]
                     st.switch_page(page_file)
 
-# Step 2: Building players
+
+# Build players
 _, col1, _ = st.columns([1, 1, 1])  
 with col1:
     if st.button("Begin Simulation", use_container_width=True):
@@ -67,7 +66,8 @@ if st.session_state["begin_simulation"] and st.session_state["agents_validated"]
         st.session_state["players_built"] = True
         st.success("Players built successfully")
 
-# Step 3: Building the Game Master
+
+# Build the Game Master
 if st.session_state["players_built"] and not st.session_state["gm_built"]:
     with st.spinner("Building the Game Master..."):
         st.session_state["gm"] = build_gm(players=st.session_state["players"], 
@@ -75,7 +75,8 @@ if st.session_state["players_built"] and not st.session_state["gm_built"]:
         st.session_state["gm_built"] = True
         st.success("Game Master built successfully")
 
-# Step 4: Run the simulation
+
+# Run the simulation
 if st.session_state["gm_built"]:
     episode_length = st.number_input("Enter the number of episodes", min_value=4, value=4, max_value=12, step=1)
     _, _, col1, _, _ = st.columns([1, 1, 1, 1, 1])  
@@ -85,12 +86,6 @@ if st.session_state["gm_built"]:
                 for _ in range(episode_length):
                     st.session_state["gm"].step()
                 st.session_state["simulation_run"] = True
-                st.success(f"Completed {episode_length} episodes.")
-
-# Step 5: Display Results
-if st.session_state["simulation_run"]:
-    st.markdown("<br>", unsafe_allow_html=True)
-    summary(st.session_state["gm"], st.session_state["players"], st.session_state["memories"])
 
 
 # "Go Back" Button
@@ -102,3 +97,9 @@ with col1:
         # Switch to the selected page
         page_file = pages["Simulations"]
         st.switch_page(page_file)
+
+
+# After the confrontation simulation, show the memory logs and summaries
+if st.session_state["simulation_run"]:
+    st.markdown("<br>", unsafe_allow_html=True)
+    summary(st.session_state["gm"], st.session_state["players"], st.session_state["memories"])
