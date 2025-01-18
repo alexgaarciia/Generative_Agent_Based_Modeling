@@ -1,13 +1,8 @@
 import streamlit as st
 
-pages = {
-    "Details": "./pages/details.py",
-}
 
+# Page personalization
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
-
-
-# Header
 st.markdown("""
     <style>
         h1 {
@@ -82,12 +77,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Center the button
+# "Go Back" button
 _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
-
 with col1:
     home_button = st.button("Go Back", use_container_width=True)
     if home_button:
         # Switch to the selected page
-        page_file = pages["Details"]
+        page_file = "./pages/details.py"
         st.switch_page(page_file)

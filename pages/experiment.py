@@ -28,7 +28,7 @@ if "simulation_run" not in st.session_state:
 
 # Dictionary mapping page names to functions
 pages = {
-    "Simulations": "./pages/simulations.py",
+    "Dashboard": "./pages/dashboard.py",
     "Agents": "./pages/agents.py"
 }
 
@@ -95,7 +95,7 @@ with col1:
     home_button = st.button("Go Back", use_container_width=True)
     if home_button:
         # Switch to the selected page
-        page_file = pages["Simulations"]
+        page_file = pages["Dashboard"]
         st.switch_page(page_file)
 
 

@@ -4,12 +4,6 @@ import streamlit as st
 from simulations.simulation_runner import create_generic_knowledge
 
 
-# Dictionary mapping page names to functions
-pages = {
-    "Simulations": "./pages/simulations.py",
-}
-
-
 # Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.title("Agent Personalization Page")
@@ -147,5 +141,5 @@ with col1:
     home_button = st.button("Go Back", use_container_width=True)
     if home_button:
         # Switch to the selected page
-        page_file = pages["Simulations"]
+        page_file = "./pages/dashboard.py"
         st.switch_page(page_file)

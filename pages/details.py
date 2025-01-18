@@ -3,8 +3,7 @@ import streamlit as st
 
 # Dictionary mapping page names to functions
 pages = {
-    "Home": "main.py",
-    "Simulations": "./pages/simulations.py",
+    "Dashboard": "./pages/dashboard.py",
     "About Us": "./pages/about_us.py"
 }
 
@@ -84,7 +83,7 @@ _, _, col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])
 with col1:
     feature_button = st.button("Simulations", use_container_width=True)
     if feature_button:
-        page_file = pages["Simulations"]
+        page_file = pages["Dashboard"]
         st.switch_page(page_file)
 with col2:
     about_us_button = st.button("About Us", use_container_width=True)

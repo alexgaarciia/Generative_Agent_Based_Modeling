@@ -1,12 +1,6 @@
 import streamlit as st
 
 
-# Dictionary mapping page names to functions
-pages = {
-    "Details": "./pages/details.py",
-}
-
-
 # Page Personalization
 st.set_page_config(page_title="main", layout="wide", initial_sidebar_state="collapsed")
 
@@ -20,5 +14,5 @@ st.markdown("""<h1>Ready to explore Generative Agent-Based Modeling?</h1>""", un
 details_button = st.button("Let's Go!")
 if details_button:
     # Switch to the "Details" page
-    page_file = pages["Details"]
+    page_file = "./pages/details.py"
     st.switch_page(page_file)
