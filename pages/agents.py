@@ -71,7 +71,10 @@ if st.session_state["generated_generic_knowledge"]:
 
         with st.form(key=f"agent_form_{agent_index}"):
             name = st.text_input(f"Name of Agent {agent_index + 1}:")
-            gender = st.selectbox(f"Gender of Agent {agent_index + 1}:", options=["male", "female"])
+            gender = st.selectbox(f"Gender of Agent {agent_index + 1}:", 
+                                  options=["male", "female"])
+            political_ideology = st.selectbox(f"Political Ideology of Agent {agent_index + 1}:",
+                                              options=["Liberal", "Conservative", "Moderate", "Libertarian", "Socialist", "Anarchist"])
             goal = st.text_area(f"Goal of Agent {agent_index + 1}:")
             temp_context = st.text_area(f"Context for Agent {agent_index + 1}:")
             context = st.session_state["generic_knowledge"] + " " + temp_context
@@ -94,6 +97,7 @@ if st.session_state["generated_generic_knowledge"]:
                 agent = {
                     "name": name,
                     "gender": gender,
+                    "political_ideology": political_ideology,
                     "goal": goal,
                     "context": context,
                     "traits": {

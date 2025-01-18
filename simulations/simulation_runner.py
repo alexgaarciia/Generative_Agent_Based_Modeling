@@ -294,6 +294,7 @@ def create_player_configs(agents):
             goal=agent["goal"],
             context=agent["context"],
             traits=agent["traits"],
+            political_ideology=agents["political_ideology"],
             formative_ages=agent["formative_ages"],
         )
         for agent in agents
