@@ -72,7 +72,7 @@ if st.session_state["generated_generic_knowledge"]:
         with st.form(key=f"agent_form_{agent_index}"):
             name = st.text_input(f"Name of Agent {agent_index + 1}:")
             gender = st.selectbox(f"Gender of Agent {agent_index + 1}:", 
-                                  options=["male", "female"])
+                                  options=["Male", "Female"])
             political_ideology = st.selectbox(f"Political Ideology of Agent {agent_index + 1}:",
                                               options=["Liberal", "Conservative", "Moderate", "Libertarian", "Socialist", "Anarchist"])
             goal = st.text_area(f"Goal of Agent {agent_index + 1}:")

@@ -3,6 +3,31 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
+def encode_political_ideology(ideology):
+    ideology_map = {
+        "Liberal": 1,
+        "Moderate": 2,
+        "Conservative": 3,
+        "Libertarian": 4,
+        "Socialist": 5,
+        "Anarchist": 6
+    }
+
+    return ideology_map.get(ideology)
+
+
+def compute_ideology_similarity(agents):
+    ideology_values = np.array([
+        encode_political_ideology(agent["political_ideology"]) for agent in agents
+    ])
+
+    # Calculate ideological distances (smaller distanc means more similar)
+    ideology_similarity = np.abs(ideology_values[:, None] - ideology_values)
+    ideology_similarity = 1 / (1 + ideology_similarity)  # Normalize to [0, 1] range (closer is more similar)
+
+    return ideology_similarity
+
+    
 def compute_agent_similarity(agents):
     # Extract numerical traits 
     traits = np.array([
@@ -27,8 +52,11 @@ def compute_agent_similarity(agents):
     tfidf_matrix = vectorizer.fit_transform(text_data)
     text_similarity = cosine_similarity(tfidf_matrix)
 
+    # Compute political ideology similarity
+    ideology_similarity = compute_ideology_similarity(agents)
+
     # Combine similarities with a weighted average
-    combined_similarity = 0.7 * traits_similarity + 0.3 * text_similarity
+    combined_similarity = 0.7 * traits_similarity + 0.3 * text_similarity + 0.2 * ideology_similarity
 
     return combined_similarity
 
