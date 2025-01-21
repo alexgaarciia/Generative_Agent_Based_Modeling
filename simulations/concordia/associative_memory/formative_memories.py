@@ -46,6 +46,7 @@ class AgentConfig:
       characters. Can be left blank if not used.
     goal: defines agents goal. Can be left blank if not used.
     date_of_birth: the date of birth for the agent.
+    political_ideology: The political beliefs or affiliations of the agent.
     formative_ages: ages at which the formative episodes will be created
     extras: a field for the user to keep any experiment specific data they need
       to define an agent
@@ -57,6 +58,7 @@ class AgentConfig:
   context: str = ''
   specific_memories: str = ''
   goal: str = ''
+  political_ideology: str = ''
   date_of_birth: datetime.datetime = DEFAULT_DOB
   formative_ages: Iterable[int] = DEFAULT_FORMATIVE_AGES
   extras: dict[str, Any] = dataclasses.field(default_factory=dict)
@@ -134,6 +136,12 @@ class FormativeMemoryFactory:
     )
     if agent_config.context:
       question += f' Incorporate the following context: {agent_config.context}'
+    if agent_config.political_ideology:
+            question += (
+                f'The story should reflect that {agent_config.name} holds a '
+                f'{agent_config.political_ideology} political ideology. '
+            )
+
     result = prompt.open_question(
         question,
         max_tokens=4500,
@@ -188,6 +196,11 @@ class FormativeMemoryFactory:
           'Make a few of the episodes relate to the '
           f'following context: "{agent_config.context}".'
       )
+    if agent_config.political_ideology:
+        question += (
+            f'\nThe political ideology of {agent_config.name} is "{agent_config.political_ideology}". '
+            'Make sure some formative episodes relate to this ideology, influencing their views and actions.'
+        )
 
     aggregated_result = prompt.open_question(
         question=question,
