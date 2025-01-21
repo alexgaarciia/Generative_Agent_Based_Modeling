@@ -6,6 +6,7 @@ from simulations.agent_similarity import *
 
 # Page personalization
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
+st.markdown("## Agent Confrontation Based On Similarity")
 
 
 # Dictionary mapping page names to functions
@@ -14,16 +15,6 @@ pages = {
     "confrontation2": "./pages/confrontation_similar.py",
     "Agents": "./pages/agents.py",
 }
-
-
-# Simulation Configuration
-st.markdown("## Agent Confrontation Based On Similarity")
-
-
-import json
-with open('agents.json', 'r') as f:
-    agents = json.load(f)
-st.session_state["agents"] = agents
 
 
 # Ensure players and memories are only built once (not every reload)
