@@ -34,7 +34,7 @@ embedder = lambda x: st_model.encode(x, show_progress_bar=False)
 API_KEY = st.session_state.get("api_key", "")
 MODEL_NAME = st.session_state.get("selected_model", "")
 if MODEL_NAME == "codestral-latest":
-    model = model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+    model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 else:
     model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 
