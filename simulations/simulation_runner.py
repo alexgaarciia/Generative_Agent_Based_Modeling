@@ -1,8 +1,8 @@
 # Import necessary libraries and components
 import concurrent.futures
 import datetime
-import sentence_transformers
 import streamlit as st
+import sentence_transformers
 
 from concordia import components as generic_components
 from concordia.agents import deprecated_agent as basic_agent

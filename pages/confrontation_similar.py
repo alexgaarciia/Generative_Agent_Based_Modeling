@@ -1,3 +1,4 @@
+import json
 import copy
 import streamlit as st
 from simulations.simulation_runner import *
@@ -57,15 +58,27 @@ if "agents" in st.session_state and st.session_state["agents"]:
         
         if submitted:
             with st.spinner("Calculating agent similarities..."):
-                method = "local" if "Using Local Functions" in selected_pair else "llm"
-                similarity_matrix = compute_agent_similarity(
-                    st.session_state["agents"],
-                    traits_weight=traits_weight,
-                    text_weight=text_weight,
-                    ideology_weight=ideology_weight,
-                    method=method,
-                )
-                most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
+                if "Using Local Functions" in selected_pair:
+                    similarity_matrix = compute_agent_similarity(
+                        st.session_state["agents"],
+                        traits_weight=traits_weight,
+                        text_weight=text_weight,
+                        ideology_weight=ideology_weight,
+                        method="local",
+                    )
+                    most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
+                else:
+                    similarity_matrix = compute_agent_similarity(
+                        st.session_state["agents"],
+                        traits_weight=traits_weight,
+                        text_weight=text_weight,
+                        ideology_weight=ideology_weight,
+                        method="llm",
+                    )
+                    
+                    similarity_result = json.loads(similarity_matrix)
+                    most_similar = similarity_result.get("most_similar", [])
+                    most_different = similarity_result.get("most_different", [])
             
             agent_names = [agent["name"] for agent in st.session_state["agents"]]
             most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])

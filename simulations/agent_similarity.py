@@ -2,7 +2,7 @@ import re
 import nltk
 import numpy as np
 import contractions
-# import streamlit as st
+import streamlit as st
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem import WordNetLemmatizer
@@ -132,20 +132,34 @@ def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideolo
         )
         return combined_similarity
     else:
+        from simulations.concordia.language_model import mistral_model
+        from simulations.concordia.language_model import gpt_model
+        API_KEY = st.session_state.get("api_key", "")
+        MODEL_NAME = st.session_state.get("selected_model", "")
+        if MODEL_NAME == "codestral-latest":
+            model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+        else:
+            model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+        
         # Prepare a prompt for the LLM
         prompt = "Compare the following agents based on traits, goals, and ideologies:\n\n"
         for i, agent in enumerate(agents):
-            prompt += f"Agent {i + 1}:\n"
+            prompt += f"{agent['name']}:\n"
             prompt += f"Traits: {agent['traits']}\n"
             prompt += f"Goal: {agent['goal']}\n"
             prompt += f"Context: {agent['context']}\n"
             prompt += f"Ideology: {agent['political_ideology']}\n\n"
 
-        prompt += "Provide a similarity matrix (NxN) where each element represents the similarity score (0 to 1) between Agent i and Agent j."
-        import streamlit as st
-        st.write(prompt)
-        # TASK: FINISH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        prompt += (
+            "Identify the two most similar agents and the two most different agents.\n"
+            "Return your answer in this format:\n"
+            '{ "most_similar": ["Agent X", "Agent Y"], "most_different": ["Agent A", "Agent B"] }\n\n'
+            "RESTRICT TO THIS, DO NOT RETURN ANYTHING ELSE"
+        )
 
+        text = model.sample_text(prompt)
+        return text
+    
 
 def find_extreme_agents(similarity_matrix, agents):
     # Total number of agents
