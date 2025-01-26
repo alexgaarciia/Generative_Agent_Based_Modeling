@@ -6,7 +6,7 @@ import json
 with open('../agents.json', 'r') as f:
     agents = json.load(f)
 
-API_KEY = "W2UYfDyh1jalNmRIyjnjqEzX5UfBbJBb"
+API_KEY = ""
 MODEL_NAME = "codestral-latest"
 model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 
