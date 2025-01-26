@@ -17,117 +17,151 @@ pages = {
 }
 
 
+# Rest variables
+if "confrontation_ready" in st.session_state:
+    del st.session_state["confrontation_ready"]
+                
+
 # Ensure players and memories are only built once (not every reload)
 if "agents" in st.session_state and st.session_state["agents"]:
-    with st.spinner("Calculating agent similarities..."):
-        similarity_matrix = compute_agent_similarity(st.session_state["agents"])
-        most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
+    st.markdown("### Set Weights for Similarity Calculation")
+    st.markdown(
+        """
+        The similarity between agents is calculated based on three components:
+        - **Traits Similarity**: Measures how similar the agents are based on their personality traits (e.g., extraversion, openness).
+        - **Text Similarity**: Compares the agents' goals and context to find common themes in their textual data.
+        - **Ideology Similarity**: Assesses how close the agents are in terms of their political ideologies.
 
-    agent_names = [agent["name"] for agent in st.session_state["agents"]]
-    most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])
-    most_different_agents = (agent_names[most_different[0]], agent_names[most_different[1]])
+        You can use the sliders below to assign weights to these components, determining their relative importance in the overall similarity calculation. 
+        The sum of all weights must equal 1 for the calculation to proceed.
+        """
+    )
+    traits_weight = st.slider("Traits Weight", min_value=0.0, max_value=1.0, value=0.7, step=0.05)
+    text_weight = st.slider("Text Weight", min_value=0.0, max_value=1.0, value=0.15, step=0.05)
+    ideology_weight = st.slider("Ideology Weight", min_value=0.0, max_value=1.0, value=0.15, step=0.05)
+    
+    if traits_weight + text_weight + ideology_weight != 1.0:
+        st.error("The sum of the weights must equal 1. Please adjust the values.")
+    else: 
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### Comparison Method Selection")
+        with st.form(key="agent_comparison_option"):
+            selected_pair = st.radio(
+            "Choose the comparison method:",
+            options=[
+                "Using Local Functions",
+                "Using Provided LLM"]
+            )
 
-    col1, col2 = st.columns(2)
-    # Display the most similar pair
-    with col1:
-        st.markdown("### Most Similar Pair")
-        st.write(f"**{most_similar_agents[0]}** and **{most_similar_agents[1]}**")
-
-    # Display the most different pair
-    with col2:
-        st.markdown("### Most Different Pair")
-        st.write(f"**{most_different_agents[0]}** and **{most_different_agents[1]}**")
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    with st.form(key="interaction_goal_form"):
-        selected_pair = st.radio(
-        "Select the pair for confrontation:",
-        options=[
-            f"Most Similar Pair: {most_similar_agents[0]} and {most_similar_agents[1]}",
-            f"Most Different Pair: {most_different_agents[0]} and {most_different_agents[1]}"]
-        )
+            submitted = st.form_submit_button("Proceed")
         
-        interaction_goal = st.text_area(
-            "Specify the goal of the interaction:",
-            placeholder="e.g., Discuss about the impact of fake news in social media."
-        )
-
-        submitted = st.form_submit_button("Submit")
-
-    if submitted:
-        # Reset players and memories when selecting a new pair
-        if "players_confrontation2" in st.session_state:
-            del st.session_state["players_confrontation2"]
-        if "memories_confrontation2" in st.session_state:
-            del st.session_state["memories_confrontation2"]
-        if "gm_confrontation2" in st.session_state:
-            del st.session_state["gm_confrontation2"]
-
-        # Extract selected players
-        if "Most Similar Pair" in selected_pair:
-            player1, player2 = most_similar_agents
+        if submitted:
+            with st.spinner("Calculating agent similarities..."):
+                method = "local" if "Using Local Functions" in selected_pair else "llm"
+                similarity_matrix = compute_agent_similarity(
+                    st.session_state["agents"],
+                    traits_weight=traits_weight,
+                    text_weight=text_weight,
+                    ideology_weight=ideology_weight,
+                    method=method,
+                )
+                most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
             
-        else:
-            player1, player2 = most_different_agents
-        
-        st.session_state["player1"] = player1
-        st.session_state["player2"] = player2
+            agent_names = [agent["name"] for agent in st.session_state["agents"]]
+            most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])
+            most_different_agents = (agent_names[most_different[0]], agent_names[most_different[1]])
+            st.session_state["confrontation_ready"] = True
 
-        if not interaction_goal:
-            st.error("Please specify the goal of the interaction before proceeding.")
-        else:
-            # Update agent goals dynamically
-            agents_copy = copy.deepcopy(st.session_state.get("updated_agents", st.session_state["agents"]))
-            for agent in agents_copy:
-                if agent["name"] in [player1, player2]:
-                    agent["goal"] = interaction_goal
-                    agent["context"] = interaction_goal
+            col1, col2 = st.columns(2)
+            # Display the most similar pair
+            with col1:
+                st.markdown("### Most Similar Pair")
+                st.write(f"**{most_similar_agents[0]}** and **{most_similar_agents[1]}**")
 
-            # Only rebuild players and memories if they haven't been created already
-            if "players_confrontation2" not in st.session_state or "memories_confrontation2" not in st.session_state:
-                with st.spinner("Building players and memories, this may take a while..."):
-                    player_configs = create_player_configs(agents_copy)
-                    players, memories = build_players(player_configs)
-                    st.session_state["players_confrontation2"] = players
-                    st.session_state["memories_confrontation2"] = memories
-                    st.success("Players and memories built successfully!")
-        
-            selected_players = [player for player in st.session_state["players_confrontation2"] if player.name in [player1, player2]]
-
-            # Build a new Game Master for this confrontation only if necessary
-            if "gm_confrontation2" not in st.session_state or st.session_state["gm_confrontation2"] is None:
-                with st.spinner("Building Game Master for confrontation..."):
-                    confrontation_premise = f"{player1} and {player2} are in a conversation. The goal of their interaction is: {interaction_goal}."
-                    st.session_state["gm_confrontation2"] = build_gm(
-                        players=selected_players, 
-                        shared_context=st.session_state.get("generic_knowledge", "") + " " + confrontation_premise
-                    )
-                    st.success("Game Master built successfully!")
+            # Display the most different pair
+            with col2:
+                st.markdown("### Most Different Pair")
+                st.write(f"**{most_different_agents[0]}** and **{most_different_agents[1]}**")
 else:
     st.error("Agent confrontation cannot start because no agents have been defined. Please refer to the button below to create them.")
-    _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+    _, _, _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
     with col1:
         if st.button("Create Agents", use_container_width=True):
             # Switch to the selected page
             page_file = pages["Agents"]
             st.switch_page(page_file)
 
+    
+# Separate condition for confrontation logic
+if st.session_state.get("confrontation_ready"):
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("### Confrontation Setup")
+    with st.form(key="interaction_goal_form"):
+        # Select pair for confrontation
+        selected_pair = st.radio(
+            "Select the pair for confrontation:",
+            options=[
+                f"Most Similar Pair: {most_similar_agents[0]} and {most_similar_agents[1]}",
+                f"Most Different Pair: {most_different_agents[0]} and {most_different_agents[1]}",
+            ],
+        )
 
-# Run the simulation only after Game Master is built and if it's not a new simulation
-if st.session_state.get("gm_confrontation2"):
-    episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=20, step=1)
-    _, _, col1, _, _ = st.columns([1, 1, 1, 1, 1])  
-    with col1:
-        if st.button("Run Simulation"):
-            with st.spinner("Running confrontation simulation..."):
-                for _ in range(episode_length):
-                    st.session_state["gm_confrontation2"].step()
-                st.session_state["simulation_completed2"] = True
+        interaction_goal = st.text_area(
+            "Specify the goal of the interaction:",
+            placeholder="e.g., Discuss about the impact of fake news in social media.",
+        )
 
+        submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        # Reset session state for confrontation-specific elements
+        for key in ["players_confrontation2", "memories_confrontation2", "gm_confrontation2"]:
+            st.session_state.pop(key, None)
+
+        # Extract players based on selected pair
+        if "Most Similar Pair" in selected_pair:
+            player1, player2 = st.session_state["most_similar_agents"]
+        else:
+            player1, player2 = st.session_state["most_different_agents"]
+
+        st.session_state["player1"] = player1
+        st.session_state["player2"] = player2
+
+        if not interaction_goal:
+            st.error("Please specify the goal of the interaction before proceeding.")
+        else:
+            # Update agent goals
+            agents_copy = copy.deepcopy(st.session_state.get("updated_agents", st.session_state["agents"]))
+            for agent in agents_copy:
+                if agent["name"] in [player1, player2]:
+                    agent["goal"] = interaction_goal
+                    agent["context"] = interaction_goal
+
+            # Build players and memories
+            with st.spinner("Building players and memories, this may take a while..."):
+                player_configs = create_player_configs(agents_copy)
+                players, memories = build_players(player_configs)
+                st.session_state["players_confrontation2"] = players
+                st.session_state["memories_confrontation2"] = memories
+
+            # Select players for the confrontation
+            selected_players = [
+                player for player in st.session_state["players_confrontation2"]
+                if player.name in [player1, player2]
+            ]
+
+            # Build the Game Master for the confrontation
+            with st.spinner("Building Game Master for confrontation..."):
+                confrontation_premise = f"{player1} and {player2} are in a conversation. The goal of their interaction is: {interaction_goal}."
+                st.session_state["gm_confrontation2"] = build_gm(
+                    players=selected_players,
+                    shared_context=st.session_state.get("generic_knowledge", "") + " " + confrontation_premise,
+                )
+                st.success("Game Master built successfully!")
+                    
 
 # Buttons for navigation
 _, _ , col1, _, _ = st.columns([1, 1, 1, 1, 1])  
-
 with col1:
     home_button = st.button("Go Back", use_container_width=True)
     if home_button:

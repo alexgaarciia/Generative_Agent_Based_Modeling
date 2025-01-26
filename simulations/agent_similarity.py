@@ -88,44 +88,63 @@ def compute_ideology_similarity(agents):
     return ideology_similarity
 
 
-def compute_agent_similarity(agents):
-    # Preprocess text data
-    agents = preprocess_text_data(agents)
-    # st.write(agents)
+def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideology_weight=0.15, method="local"):
+    if method == "local":
+        # Preprocess text data
+        agents = preprocess_text_data(agents)
+        # st.write(agents)
 
-    # Extract numerical traits 
-    traits = np.array([
-        [
-            agent["traits"]["extraversion"],
-            agent["traits"]["neuroticism"],
-            agent["traits"]["openness"],
-            agent["traits"]["conscientiousness"],
-            agent["traits"]["agreeableness"],
-        ]
-        for agent in agents
-    ])
+        # Extract numerical traits 
+        traits = np.array([
+            [
+                agent["traits"]["extraversion"],
+                agent["traits"]["neuroticism"],
+                agent["traits"]["openness"],
+                agent["traits"]["conscientiousness"],
+                agent["traits"]["agreeableness"],
+            ]
+            for agent in agents
+        ])
 
-    # Compute cosine similarity for traits
-    traits_similarity = cosine_similarity(traits)
+        # Compute cosine similarity for traits
+        traits_similarity = cosine_similarity(traits)
 
-    # Combine text data into a single string
-    text_data = [f"{agent['goal']} {agent['context']}" for agent in agents]
+        # Combine text data into a single string
+        text_data = [f"{agent['goal']} {agent['context']}" for agent in agents]
 
-    # Compute the TF-IDF matrix for text data
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform(text_data)
+        # Compute the TF-IDF matrix for text data
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform(text_data)
 
-    # Calculate cosine similarity for text data
-    text_similarity = cosine_similarity(tfidf_matrix)
-    # st.write(text_similarity)
+        # Calculate cosine similarity for text data
+        text_similarity = cosine_similarity(tfidf_matrix)
+        # st.write(text_similarity)
 
-    # Compute political ideology similarity
-    ideology_similarity = compute_ideology_similarity(agents)
-    # st.write(ideology_similarity)
+        # Compute political ideology similarity
+        ideology_similarity = compute_ideology_similarity(agents)
+        # st.write(ideology_similarity)
 
-    # Combine similarities with a weighted average
-    combined_similarity = 0.7 * traits_similarity + 0.2 * text_similarity + 0.1 * ideology_similarity
-    return combined_similarity
+        # Combine similarities with a weighted average
+        combined_similarity = (
+            traits_weight * traits_similarity +
+            text_weight * text_similarity +
+            ideology_weight * ideology_similarity
+        )
+        return combined_similarity
+    else:
+        # Prepare a prompt for the LLM
+        prompt = "Compare the following agents based on traits, goals, and ideologies:\n\n"
+        for i, agent in enumerate(agents):
+            prompt += f"Agent {i + 1}:\n"
+            prompt += f"Traits: {agent['traits']}\n"
+            prompt += f"Goal: {agent['goal']}\n"
+            prompt += f"Context: {agent['context']}\n"
+            prompt += f"Ideology: {agent['political_ideology']}\n\n"
+
+        prompt += "Provide a similarity matrix (NxN) where each element represents the similarity score (0 to 1) between Agent i and Agent j."
+        import streamlit as st
+        st.write(prompt)
+        # TASK: FINISH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 def find_extreme_agents(similarity_matrix, agents):
