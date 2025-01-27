@@ -1,4 +1,3 @@
-import json
 import copy
 import streamlit as st
 from simulations.simulation_runner import *
@@ -67,6 +66,9 @@ if "agents" in st.session_state and st.session_state["agents"]:
                         method="local",
                     )
                     most_similar, most_different = find_extreme_agents(similarity_matrix, st.session_state["agents"])
+                    agent_names = [agent["name"] for agent in st.session_state["agents"]]
+                    most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])
+                    most_different_agents = (agent_names[most_different[0]], agent_names[most_different[1]])
                 else:
                     similarity_matrix = compute_agent_similarity(
                         st.session_state["agents"],
@@ -75,26 +77,30 @@ if "agents" in st.session_state and st.session_state["agents"]:
                         ideology_weight=ideology_weight,
                         method="llm",
                     )
-                    
-                    similarity_result = json.loads(similarity_matrix)
-                    most_similar = similarity_result.get("most_similar", [])
-                    most_different = similarity_result.get("most_different", [])
+
+                    # Split the string into two parts
+                    parts = similarity_matrix.split("Most Different:")
+
+                    # Extract the "Most Similar" pair
+                    most_similar_part = parts[0].replace("Most Similar:", "").strip()
+                    most_similar_agents = [name.strip() for name in most_similar_part.split(",")]
+
+                    # Extract the "Most Different" pair
+                    most_different_part = parts[1].strip()
+                    most_different_agents = [name.strip() for name in most_different_part.split(",")]
             
-            agent_names = [agent["name"] for agent in st.session_state["agents"]]
-            most_similar_agents = (agent_names[most_similar[0]], agent_names[most_similar[1]])
-            most_different_agents = (agent_names[most_different[0]], agent_names[most_different[1]])
             st.session_state["confrontation_ready"] = True
 
             col1, col2 = st.columns(2)
             # Display the most similar pair
             with col1:
                 st.markdown("### Most Similar Pair")
-                st.write(f"**{most_similar_agents[0]}** and **{most_similar_agents[1]}**")
+                st.write(f"{most_similar_agents[0]} and {most_similar_agents[1]}")
 
             # Display the most different pair
             with col2:
                 st.markdown("### Most Different Pair")
-                st.write(f"**{most_different_agents[0]}** and **{most_different_agents[1]}**")
+                st.write(f"{most_different_agents[0]} and {most_different_agents[1]}")
 else:
     st.error("Agent confrontation cannot start because no agents have been defined. Please refer to the button below to create them.")
     _, _, _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  

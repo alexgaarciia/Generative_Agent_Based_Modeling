@@ -151,10 +151,14 @@ def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideolo
             prompt += f"Ideology: {agent['political_ideology']}\n\n"
 
         prompt += (
-            "Identify the two most similar agents and the two most different agents.\n"
-            "Return your answer in this format:\n"
-            '{ "most_similar": ["Agent X", "Agent Y"], "most_different": ["Agent A", "Agent B"] }\n\n'
-            "RESTRICT TO THIS, DO NOT RETURN ANYTHING ELSE"
+            f"The importance weights for comparison are:\n"
+            f"- Traits Weight: {traits_weight}\n"
+            f"- Text Weight: {text_weight}\n"
+            f"- Ideology Weight: {ideology_weight}\n\n"
+            "Using these weights, identify the two most similar agents and the two most different agents without giving any explanations.\n"
+            "Respond in this format:\n"
+            "Most Similar: Agent X, Agent Y\n"
+            "Most Different: Agent A, Agent B\n"
         )
 
         text = model.sample_text(prompt)
