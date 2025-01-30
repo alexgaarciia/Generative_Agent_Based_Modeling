@@ -40,7 +40,7 @@ if uploaded_file is not None:
 
 # "Go Back" and "Go to Dashboard" buttons
 st.markdown("<br>", unsafe_allow_html=True)
-_, _ , col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  
+_ , col1, col2, _ = st.columns([1, 1, 1, 1])  
 with col1:
     go_back = st.button("Go Back", use_container_width=True)
     if go_back:
