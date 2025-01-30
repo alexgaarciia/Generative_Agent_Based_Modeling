@@ -1,4 +1,17 @@
 import json
+import streamlit as st
+from simulations.concordia.language_model import gpt_model
+from simulations.concordia.language_model import mistral_model
+
+
+# Setup LLM
+API_KEY = st.session_state.get("api_key", "")
+MODEL_NAME = st.session_state.get("selected_model", "")
+if MODEL_NAME == "codestral-latest":
+    model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+else:
+    model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
+
 
 # Define the expected structure of the agent
 expected_agent_structure = {
@@ -17,8 +30,9 @@ expected_agent_structure = {
     "formative_ages": list
 }
 
+
+# Validate if the agent matches the expected format
 def validate_agent(agent):
-    """Validate if the agent matches the expected format"""
     try:
         # Validate basic structure of the agent
         if not isinstance(agent["name"], str):
@@ -47,8 +61,9 @@ def validate_agent(agent):
     except KeyError:
         return False
     
+
+# Validate if the uploaded JSON file follows the correct structure
 def validate_agents_file(uploaded_file):
-    """Validate if the uploaded JSON file follows the correct structure"""
     try:
         # Read content if it's a file object
         agents_data = json.load(uploaded_file) if hasattr(uploaded_file, 'read') else uploaded_file
@@ -67,3 +82,15 @@ def validate_agents_file(uploaded_file):
         return False, "The uploaded file is not a valid JSON."
     except Exception as e:
         return False, str(e)
+
+
+# Configure the generic knowledge of players and GM
+def create_generic_knowledge(shared_memories):
+    shared_memories = st.session_state["shared_context"]
+    shared_context = model.sample_text(
+        'Summarize the following passage in a concise and insightful fashion:\n'
+        + '\n'.join(shared_memories)
+        + '\n'
+        + 'Summary:'
+    )
+    return shared_context

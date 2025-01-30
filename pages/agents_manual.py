@@ -1,7 +1,7 @@
 import json
 import random
 import streamlit as st
-from simulations.simulation_runner import create_generic_knowledge
+from simulations.agent_creation import create_generic_knowledge
 
 
 # Page personalization

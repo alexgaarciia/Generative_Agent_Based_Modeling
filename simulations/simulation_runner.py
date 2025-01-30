@@ -39,17 +39,7 @@ else:
     model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 
 
-# Configure the generic knowledge of players and GM
-def create_generic_knowledge(shared_memories):
-    shared_memories = st.session_state["shared_context"]
-    shared_context = model.sample_text(
-        'Summarize the following passage in a concise and insightful fashion:\n'
-        + '\n'.join(shared_memories)
-        + '\n'
-        + 'Summary:'
-    )
-    return shared_context
-
+# Memory importance module for generative agents
 importance_model = importance_function.ConstantImportanceModel()
 importance_model_gm = importance_function.ConstantImportanceModel()
 
