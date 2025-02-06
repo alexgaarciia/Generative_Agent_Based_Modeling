@@ -77,7 +77,7 @@ if st.session_state["generated_generic_knowledge"]:
                                               options=["Liberal", "Conservative", "Moderate", "Libertarian", "Socialist", "Anarchist"])
             goal = st.text_area(f"Goal of Agent {agent_index + 1}:")
             temp_context = st.text_area(f"Context for Agent {agent_index + 1}:")
-            context = st.session_state["generic_knowledge"] + " " + temp_context
+            context = (st.session_state["generic_knowledge"] + "." + temp_context).replace("\n", "\\n")
             
             st.subheader(f"Big Five Personality Traits for Agent {agent_index + 1}:")
             extraversion = st.selectbox("Extraversion", [1, 2, 3, 4, 5])
@@ -140,7 +140,7 @@ if st.session_state["generated_generic_knowledge"]:
 
 # "Go Back" and "Go to Dashboard" buttons
 st.markdown("<br>", unsafe_allow_html=True)
-_, _ , col1, col2, _, _ = st.columns([1, 1, 1, 1, 1, 1])  
+col1, col2, col3 = st.columns([1, 1, 1])  
 with col1:
     go_back = st.button("Go Back", use_container_width=True)
     if go_back:
@@ -154,3 +154,13 @@ with col2:
         # Switch to the selected page
         page_file = "./pages/dashboard.py"
         st.switch_page(page_file)
+
+with col3:
+    erase_agents = st.button("Create New Agents", use_container_width=True)
+    if erase_agents:
+        st.session_state.pop("generated_generic_knowledge", None)
+        st.session_state.pop("agents", None)
+        st.session_state.pop("form_submitted", None)
+        st.session_state.pop("current_agent", None)
+        st.rerun()
+        
