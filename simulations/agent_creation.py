@@ -18,8 +18,6 @@ expected_agent_structure = {
     "name": str,
     "gender": str,
     "political_ideology": str,
-    "goal": str,
-    "context": str,
     "traits": {
         "extraversion": int,
         "neuroticism": int,
@@ -40,10 +38,6 @@ def validate_agent(agent):
         if not isinstance(agent["gender"], str):
             return False
         if not isinstance(agent["political_ideology"], str):
-            return False
-        if not isinstance(agent["goal"], str):
-            return False
-        if not isinstance(agent["context"], str):
             return False
         
         # Validate traits
