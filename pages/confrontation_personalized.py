@@ -29,14 +29,13 @@ if "agents" in st.session_state and st.session_state["agents"]:
         agents_data.append({
             "Name": agent["name"],
             "Gender": agent["gender"],
-            "Traits": traits_summary
+            "Traits": traits_summary,
+            "Political Ideology": agent["political_ideology"]
         })
 
-    # Convert to DataFrame
-    agents_df = pd.DataFrame(agents_data)
-
-    # Display the DataFrame as a table
-    st.dataframe(agents_df)
+    # Display information as a table
+    st.dataframe(pd.DataFrame(agents_data)
+)
 
     st.markdown("### Select Agents To Confront")
     with st.form("confrontation_form"):
