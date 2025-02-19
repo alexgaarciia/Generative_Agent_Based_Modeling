@@ -193,6 +193,7 @@ elif st.session_state["step"] == 3:
         if new_simulation:
             # Reset necessary session state variables
             st.session_state["step"] = 1  
+            st.session_state["players"] = []
             st.session_state["memories"] = []
             st.session_state["players_built"] = False
             st.session_state["gm_built"] = False
