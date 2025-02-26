@@ -1,8 +1,14 @@
+"""
+This module provides utility functions for validating agent structures and generating generic knowledge 
+for simulation participants. It includes functions for validating the format of agent JSON files, ensuring 
+that agents have the required attributes and correct data types. Additionally, it provides a function to 
+generate a concise summary of a shared context using a language model.
+"""
+
 import json
 import streamlit as st
 from simulations.concordia.language_model import gpt_model
 from simulations.concordia.language_model import mistral_model
-
 
 # Setup LLM
 API_KEY = st.session_state.get("api_key", "")
@@ -11,7 +17,6 @@ if MODEL_NAME == "codestral-latest":
     model = mistral_model.MistralLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
 else:
     model = gpt_model.GptLanguageModel(api_key=API_KEY, model_name=MODEL_NAME)
-
 
 # Define the expected structure of the agent
 expected_agent_structure = {
@@ -28,45 +33,71 @@ expected_agent_structure = {
     "formative_ages": list
 }
 
-
-# Validate if the agent matches the expected format
 def validate_agent(agent):
+    """
+    Validates that the provided agent dictionary matches to the expected format.
+
+    This function checks for:
+      - 'name', 'gender', and 'political_ideology' are strings.
+      - 'traits' is a dictionary with integer values.
+      - 'formative_ages' is a list of integers.
+
+    Parameters:
+        agent (dict): The agent data to validate.
+
+    Returns:
+        bool: True if the agent matches the expected structure, False otherwise.
+    """
     try:
-        # Validate basic structure of the agent
+        # Check basic string fields
         if not isinstance(agent["name"], str):
             return False
         if not isinstance(agent["gender"], str):
             return False
         if not isinstance(agent["political_ideology"], str):
             return False
-        
-        # Validate traits
+
+        # Check that all trait values are integers
         traits = agent["traits"]
         if not all(isinstance(traits[key], int) for key in traits):
             return False
 
-        # Validate formative ages
+        # Check that formative ages is a list of integers
         if not isinstance(agent["formative_ages"], list):
             return False
         if not all(isinstance(age, int) for age in agent["formative_ages"]):
             return False
-        
+
         return True
     except KeyError:
+        # A missing key indicates the agent structure is invalid
         return False
     
 
-# Validate if the uploaded JSON file follows the correct structure
 def validate_agents_file(uploaded_file):
+    """
+    Validates the structure of an uploaded JSON file containing agents.
+
+    The function ensures:
+      - The file contains a JSON list.
+      - Each agent in the list adheres to the expected structure.
+
+    Parameters:
+        uploaded_file: A file object or already-parsed JSON data.
+
+    Returns:
+        tuple: A tuple (bool, str) where the boolean indicates whether the file is valid,
+               and the string provides a message regarding the validation result.
+    """
     try:
-        # Read content if it's a file object
+        # Load JSON content from the file if needed
         agents_data = json.load(uploaded_file) if hasattr(uploaded_file, 'read') else uploaded_file
-        
-        # Check if the uploaded JSON is a list of agents
+
+        # Check that the JSON data is a list
         if not isinstance(agents_data, list):
             return False, "The uploaded file must be a list of agents."
-        
-        # Check if each agent follows the expected format
+
+        # Validate each agent in the list
         for agent in agents_data:
             if not validate_agent(agent):
                 return False, f"Agent {agent.get('name', 'Unnamed')} has an invalid structure."
@@ -78,9 +109,22 @@ def validate_agents_file(uploaded_file):
         return False, str(e)
 
 
-# Configure the generic knowledge of players and GM
 def create_generic_knowledge(shared_memories):
+    """
+    Generates a summarized version of shared context for simulation participants.
+
+    This function retrieves the shared context from the session state,
+    creates a prompt, and uses the language model to generate a concise summary.
+
+    Parameters:
+        shared_memories: Not used directly; the function accesses the shared context via session state.
+
+    Returns:
+        str: The summarized shared context.
+    """
+    # Retrieve the shared context from the session state.
     shared_memories = st.session_state["shared_context"]
+    # Build a prompt and generate a summary using the language model.
     shared_context = model.sample_text(
         'Summarize the following passage in a concise and insightful fashion:\n'
         + '\n'.join(shared_memories)
