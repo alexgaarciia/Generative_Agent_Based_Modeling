@@ -13,7 +13,7 @@ with st.form(key="agent_creation_option"):
             "Load pre-existing agents from a JSON file",
             "Manually create new agents"])
 
-    submitted = st.form_submit_button("Proceed")
+    submitted = st.form_submit_button("Proceed", use_container_width=True)
 
     if submitted:
         if "Load pre-existing agents from a JSON file" in selected_pair:
