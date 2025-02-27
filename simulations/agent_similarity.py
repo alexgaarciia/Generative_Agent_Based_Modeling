@@ -1,132 +1,19 @@
 """
-This module provides utility functions for cleaning, preprocessing, and computing similarity between agents.
-It includes text normalization using NLTK and contractions, TF-IDF vectorization for text-based similarity,
-and cosine similarity computations for numerical traits and political ideologies.
-Parallel processing is employed to speed up text preprocessing.
+This module provides utility functions for computing similarity between agents.
+It includes:
+  - Numerical trait similarity (e.g., Big Five traits).
+  - Text-based similarity using Sentence-BERT embeddings for 'goal' and 'ind_context'.
+  - Political ideology similarity via a numeric encoding.
+  
+An optional language model (LLM) approach is also provided if local computations
+are not desired. The weighted combination of these similarities can then be used
+to identify the most similar and most different agent pairs.
 """
 
-import re
-import nltk
 import numpy as np
-import contractions
 import streamlit as st
+from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import wordpunct_tokenize
-from nltk.corpus import stopwords, wordnet as wn
-from joblib import Parallel, delayed
-
-# -----------------------------------------------------------------------------
-# Download necessary NLTK data files if not already present.
-# -----------------------------------------------------------------------------
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('averaged_perceptron_tagger')
-
-
-def get_wordnet_pos(word):
-    """
-    Map an NLTK part-of-speech tag to a WordNet POS tag for accurate lemmatization.
-
-    Parameters:
-        word (str): The word for which the POS tag is to be determined.
-
-    Returns:
-        str: The corresponding WordNet POS tag (e.g., wn.NOUN, wn.VERB). 
-             Defaults to wn.NOUN if no mapping is found.
-    """
-    # Get the POS tag for the word and extract the first letter of the tag
-    tag = nltk.pos_tag([word])[0][1][0].upper()
-    
-    # Define mapping from NLTK POS tag initial to WordNet POS tag
-    tag_dict = {
-        "J": wn.ADJ,
-        "N": wn.NOUN,
-        "V": wn.VERB,
-        "R": wn.ADV,
-    }
-    return tag_dict.get(tag, wn.NOUN)
-
-
-def clean_text(text, stopwords_en, wnl):
-    """
-    Clean and preprocess a text string for improved TF-IDF representation.
-
-    The cleaning process includes:
-      - Expanding contractions.
-      - Removing numerical digits.
-      - Tokenizing the text into alphanumeric tokens.
-      - Converting tokens to lowercase and lemmatizing them based on POS.
-      - Removing stopwords.
-
-    Parameters:
-        text (str): The raw text string to be cleaned.
-        stopwords_en (set): A set of English stopwords to be removed.
-        wnl (WordNetLemmatizer): An instance of a WordNet lemmatizer.
-
-    Returns:
-        str: The cleaned and preprocessed text.
-    """
-    # Expand contractions 
-    text = contractions.fix(text)  
-    
-    # Remove all numeric characters
-    text = re.sub(r'\d+', '', text)  
-    
-    # Tokenize the text and retain only alphanumeric tokens
-    tokens = [token for token in wordpunct_tokenize(text) if token.isalnum()]
-    
-    # Lowercase and lemmatize each token using the appropriate POS tag
-    tokens = [wnl.lemmatize(token.lower(), get_wordnet_pos(token)) for token in tokens]
-    
-    # Remove any stopwords from the token list
-    tokens = [token for token in tokens if token not in stopwords_en]
-    return " ".join(tokens)
-
-
-def preprocess_single_agent(agent, stopwords_en, wnl):
-    """
-    Preprocess the 'goal' and 'context' fields of a single agent.
-
-    Parameters:
-        agent (dict): A dictionary representing an agent, expected to contain keys 'goal' and 'context'.
-        stopwords_en (set): A set of English stopwords.
-        wnl (WordNetLemmatizer): An instance of WordNetLemmatizer for lemmatization.
-
-    Returns:
-        dict: The updated agent dictionary with cleaned 'goal' and 'context' fields.
-    """
-    if "goal" in agent:
-        agent["goal"] = clean_text(agent["goal"], stopwords_en, wnl)
-    if "context" in agent:
-        agent["context"] = clean_text(agent["context"], stopwords_en, wnl)
-    return agent
-
-
-def preprocess_text_data(agents):
-    """
-    Preprocess the textual data (goal and context) for a list of agents using parallel processing.
-
-    This function initializes necessary resources (stopwords and lemmatizer) and then processes each agent in parallel.
-
-    Parameters:
-        agents (list): A list of agent dictionaries.
-
-    Returns:
-        list: The list of processed agent dictionaries with updated text fields.
-    """
-    # Load English stopwords and initialize the WordNet lemmatizer
-    stopwords_en = set(stopwords.words("english"))
-    wnl = WordNetLemmatizer()
-
-    # Use parallel processing to preprocess each agent concurrently
-    processed_agents = Parallel(n_jobs=-1)(
-        delayed(preprocess_single_agent)(agent, stopwords_en, wnl) for agent in agents
-    )
-    return processed_agents
-
 
 def encode_political_ideology(ideology):
     """
@@ -178,29 +65,26 @@ def compute_ideology_similarity(agents):
 
 def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideology_weight=0.15, method="local"):
     """
-    Compute the overall similarity matrix between agents using weighted components.
-
-    Two methods are available:
-      - "local": Uses local computations to derive similarities based on numerical traits,
-                 TF-IDF representations of textual data, and political ideology.
-      - Otherwise: Uses a language model (LLM) to compute similarities by comparing agents
-                     via a generated prompt.
-
+    Compute an overall similarity matrix between agents using a weighted combination of:
+      - Numerical trait similarity
+      - Sentence-BERT embeddings of text (goal + context)
+      - Political ideology similarity
+      
+    If 'method' is not "local", an LLM-based method is used instead (sends data to a language model).
+    
     Parameters:
         agents (list): A list of agent dictionaries.
-        traits_weight (float): Weight assigned to the similarity of numerical traits.
-        text_weight (float): Weight assigned to text-based similarity.
+        traits_weight (float): Weight assigned to numerical trait similarity.
+        text_weight (float): Weight assigned to text-based similarity (Sentence-BERT).
         ideology_weight (float): Weight assigned to political ideology similarity.
-        method (str): The method to compute similarity ("local" for local functions or any other value for LLM-based).
+        method (str): "local" to compute locally; otherwise uses an LLM prompt.
 
     Returns:
-        np.ndarray or str: If using the "local" method, returns a similarity matrix (numpy array).
-                           Otherwise, returns the response from the language model.
+        np.ndarray or str:
+            - If method="local", returns a 2D numpy array of similarity scores.
+            - Otherwise, returns the LLM response as a string.
     """
     if method == "local":
-        # Preprocess the textual data for each agent
-        agents = preprocess_text_data(agents)
-        
         # Extract numerical traits for each agent
         traits = np.array([
             [
@@ -216,15 +100,11 @@ def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideolo
         # Compute cosine similarity between agents based on traits
         traits_similarity = cosine_similarity(traits)
 
-        # Combine 'goal' and 'context' fields for text processing
-        text_data = [f"{agent['goal']} {agent['context']}" for agent in agents]
-        
-        # Vectorize the text using TF-IDF
-        vectorizer = TfidfVectorizer()
-        tfidf_matrix = vectorizer.fit_transform(text_data)
-        
-        # Compute cosine similarity on the TF-IDF matrix
-        text_similarity = cosine_similarity(tfidf_matrix)
+        # Compute text-based similarity using Sentence-BERT
+        text_data = [f"{agent['goal']} {agent['ind_context']}" for agent in agents]
+        model_sentence_transformer = SentenceTransformer("all-MiniLM-L6-v2")
+        text_embeddings = model_sentence_transformer.encode(text_data)
+        text_similarity = cosine_similarity(text_embeddings)
 
         # Compute political ideology similarity
         ideology_similarity = compute_ideology_similarity(agents)
