@@ -82,7 +82,7 @@ if st.session_state["confs_agents_validated"] and st.session_state["confs_step"]
                         st.session_state["confs_generated_generic_knowledge"] = True
                         st.session_state["confs_generic_knowledge"] = generic_knowledge
                         updated_agents = []
-                        for agent in copy.deepcopy(st.session_state["agentsy"]):
+                        for agent in copy.deepcopy(st.session_state["agents"]):
                             agent["context"] = generic_knowledge
                             updated_agents.append(agent)
                         st.session_state["confs_agents_copied"] = updated_agents

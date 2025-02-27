@@ -122,8 +122,6 @@ def create_generic_knowledge(shared_memories):
     Returns:
         str: The summarized shared context.
     """
-    # Retrieve the shared context from the session state.
-    shared_memories = st.session_state["shared_context"]
     # Build a prompt and generate a summary using the language model.
     shared_context = model.sample_text(
         'Summarize the following passage in a concise and insightful fashion:\n'
