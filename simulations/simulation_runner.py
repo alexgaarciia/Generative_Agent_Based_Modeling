@@ -112,23 +112,23 @@ def build_players(player_configs):
     Returns:
         tuple: A tuple containing a list of players and their corresponding memories.
     """
-   num_players = len(player_configs)
-   players = []
-   memories = {}
-   measurements = measurements_lib.Measurements()
-   
-   player_names = [player.name for player in player_configs][:num_players]
-   with concurrent.futures.ThreadPoolExecutor(max_workers=num_players) as pool:
-    for agent, mem in pool.map(build_agent,
-                                player_configs[:num_players],
-                                # All players get the same `player_names`.
-                                [player_names] * num_players,
-                                # All players get the same `measurements` object.
-                                [measurements] * num_players):
-           players.append(agent)
-           memories[agent.name] = mem
+    num_players = len(player_configs)
+    players = []
+    memories = {}
+    measurements = measurements_lib.Measurements()
     
-    return players, memories
+    player_names = [player.name for player in player_configs][:num_players]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=num_players) as pool:
+        for agent, mem in pool.map(build_agent,
+                                    player_configs[:num_players],
+                                    # All players get the same `player_names`.
+                                    [player_names] * num_players,
+                                    # All players get the same `measurements` object.
+                                    [measurements] * num_players):
+            players.append(agent)
+            memories[agent.name] = mem
+        
+        return players, memories
 
 def build_agent(agent_config,
                 player_names: list[str],
