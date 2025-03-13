@@ -6,18 +6,10 @@ It verifies that the language model is accessible by attempting to generate a sa
 import sys
 from pathlib import Path
 
-# -----------------------------------------------------------------------------
-# Extend Python's module search path to include the "simulations" directory.
-# This allows modules within the "simulations" package to be imported.
-# -----------------------------------------------------------------------------
+# Extend Python's module search path to include the "simulations" directory and import the necessary modules
 validation_dir = Path("./simulations")
 sys.path.append(str(validation_dir))
 
-# -----------------------------------------------------------------------------
-# Import language model modules from the 'concordia' subpackage.
-# Depending on the model name provided, one of these will be used to create
-# a language model instance.
-# -----------------------------------------------------------------------------
 from concordia.language_model import gpt_model
 from concordia.language_model import mistral_model
 
@@ -44,7 +36,6 @@ def validate_model(api_key, model_name):
         return True 
     
     except Exception as e:
-        # Print the exception message to indicate why validation failed
         print(f"Model validation failed: {e}")
         return False 
     
