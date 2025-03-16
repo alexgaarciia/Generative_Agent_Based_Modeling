@@ -15,6 +15,18 @@ import streamlit as st
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
+def normalize_similarity(matrix):
+    """
+    Normalize a cosine similarity matrix from [-1,1] to [0,1] range.
+
+    Parameters:
+        matrix (np.ndarray): A similarity matrix with values in the range [-1,1].
+
+    Returns:
+        np.ndarray: A normalized similarity matrix in the range [0,1].
+    """
+    return (matrix + 1) / 2  
+
 def encode_political_ideology(ideology):
     """
     Encode a political ideology string into a numerical value.
@@ -99,12 +111,14 @@ def compute_agent_similarity(agents, traits_weight=0.7, text_weight=0.15, ideolo
         
         # Compute cosine similarity between agents based on traits
         traits_similarity = cosine_similarity(traits)
+        traits_similarity = normalize_similarity(traits_similarity)
 
         # Compute text-based similarity using Sentence-BERT
         text_data = [f"{agent['goal']} {agent['ind_context']}" for agent in agents]
         model_sentence_transformer = SentenceTransformer("all-MiniLM-L6-v2")
         text_embeddings = model_sentence_transformer.encode(text_data)
         text_similarity = cosine_similarity(text_embeddings)
+        text_similarity = normalize_similarity(text_similarity) 
 
         # Compute political ideology similarity
         ideology_similarity = compute_ideology_similarity(agents)
