@@ -1,4 +1,7 @@
+import json
+import datetime
 import streamlit as st
+from simulations.agent_creation import validate_agents_file, create_agent
 
 
 # Page personalization
@@ -6,30 +9,144 @@ st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.title("Agent Personalization Page")
 
 
+# Initialize session state variables
+if "creation_step" not in st.session_state:
+    st.session_state["creation_step"] = 1 
+if "agents" not in st.session_state:
+    st.session_state["agents"] = []
+if "current_agent" not in st.session_state:
+    st.session_state["current_agent"] = 0
+if "form_submitted" not in st.session_state:
+    st.session_state["form_submitted"] = False
+
+
 # Agent creation form
-with st.form(key="agent_creation_option"):
-    selected_pair = st.radio("Please choose your preferred method for agent creation:",
-        options=[
-            "Load pre-existing agents from a JSON file",
-            "Manually create new agents"])
+if st.session_state["creation_step"] == 1:    
+    with st.form(key="agent_creation_option"):
+        selected_pair = st.radio("Please choose your preferred method for agent creation:",
+            options=[
+                "Load pre-existing agents from a JSON file",
+                "Manually create new agents"])
 
-    submitted = st.form_submit_button("Proceed", use_container_width=True)
-
-    if submitted:
-        if "Load pre-existing agents from a JSON file" in selected_pair:
-            page_file = "./pages/agents_json.py"
-            st.switch_page(page_file)
-        else:
-            page_file = "./pages/agents_manual.py"
-            st.switch_page(page_file)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            home_button = st.form_submit_button("Go to Dashboard", use_container_width=True)            
+        with col2:
+            next_pressed = st.form_submit_button("Next", use_container_width=True)
             
+        if home_button:
+            page_file = "./pages/dashboard.py"
+            st.switch_page(page_file) 
+        elif next_pressed:
+            if "Load pre-existing agents from a JSON file" in selected_pair:
+                st.session_state["creation_step"] = 2
+                st.rerun()
+            else:
+                st.session_state["creation_step"] = 3
+                st.rerun()
 
-# "Go Back" Button
-st.markdown("<br>", unsafe_allow_html=True)
-_, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
-with col1:
-    home_button = st.button("Go Back", use_container_width=True)
-    if home_button:
-        # Switch to the selected page
-        page_file = "./pages/dashboard.py"
-        st.switch_page(page_file)
+elif st.session_state["creation_step"] == 2:
+    st.write("To load pre-existing agents, please upload the JSON file containing the agent data. "
+            "Ensure that the file is structured correctly for seamless integration.")    
+    uploaded_file = st.file_uploader(
+        "Choose a JSON file with agent data",
+        type="json", 
+        label_visibility="collapsed"
+    )
+
+    if uploaded_file is not None:
+        try:
+            # Read the content of the uploaded file
+            file_content = uploaded_file.read().decode("utf-8")
+            agents_data = json.loads(file_content)  # Convert string content into JSON object (list of agents)
+
+            # Validate the structure of the agents
+            is_valid, message = validate_agents_file(agents_data)
+            
+            if is_valid:
+                # Store agents data in session state
+                st.session_state["agents"] = agents_data
+                st.success("Agents loaded successfully!")
+            else:
+                st.error(message)
+        except json.JSONDecodeError:
+            st.error("The uploaded file is not a valid JSON.")
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+            
+    col1, col2 = st.columns([1, 1])  
+    col1, col2, col3 = st.columns([1, 1, 1])  
+    with col1:
+        go_back = st.button("Go Back", use_container_width=True)
+        if go_back:
+            st.session_state["creation_step"] = 1
+            st.rerun()
+    with col2:
+        dashboard_button = st.button("Go to Dashboard", use_container_width=True)
+        if dashboard_button:
+            st.session_state["creation_step"] = 1
+            page_file = "./pages/dashboard.py"
+            st.switch_page(page_file)
+    with col3:
+        erase_agents = st.button("Create New Agents", use_container_width=True)
+        if erase_agents:
+            st.session_state.pop("agents", None)
+            st.session_state["creation_step"] = 1
+            st.rerun()   
+
+elif st.session_state["creation_step"] == 3:
+    st.markdown("### Step 1: Select Number of Agents")
+    num_agents = st.slider(
+        "Select the number of agents (4 to 6):", min_value=4, max_value=6, value=4)
+
+    # Initialize agent list and current step
+    if 'agents' not in st.session_state:
+        st.session_state.agents = []
+    if 'current_agent' not in st.session_state:
+        st.session_state.current_agent = 0
+    if 'form_submitted' not in st.session_state:
+        st.session_state.form_submitted = False
+
+    # Display and save agents after all are created
+    if st.session_state.form_submitted:
+        st.markdown("### Step 3: Review and Save Agents")
+        _, _, _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+        with col1:
+            if st.button("Save Agents"):
+                # Generate a unique filename using the current timestamp and save agents to a JSON file
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"agents_{timestamp}.json"
+                
+                with open(filename, "w") as f:
+                    json.dump(st.session_state.agents, f, indent=4)
+                    
+        if st.session_state.agents:
+            st.success("Agents saved successfully!")
+            st.write("**Saved Agents:**")
+            for agent in st.session_state.agents:
+                st.json(agent)
+    else:
+        st.markdown("### Step 2: Create Agents")
+        create_agent(num_agents)
+   
+    col1, col2, col3 = st.columns([1, 1, 1])  
+    with col1:
+        go_back = st.button("Go Back", use_container_width=True)
+        if go_back:
+            st.session_state["creation_step"] = 1
+            st.rerun()
+    with col2:
+        dashboard_button = st.button("Go to Dashboard", use_container_width=True)
+        if dashboard_button:
+            st.session_state["creation_step"] = 1
+            page_file = "./pages/dashboard.py"
+            st.switch_page(page_file)
+    with col3:
+        erase_agents = st.button("Create New Agents", use_container_width=True)
+        if erase_agents:
+            st.session_state.pop("agents", None)
+            st.session_state.pop("form_submitted", None)
+            st.session_state.pop("current_agent", None)
+            st.session_state["creation_step"] = 1
+            st.rerun()         
+                
