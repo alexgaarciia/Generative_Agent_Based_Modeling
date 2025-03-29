@@ -36,6 +36,8 @@ if "confs_gm_confrontation" not in st.session_state:
     st.session_state["confs_gm_confrontation"] = None
 if "confs_confrontation_ready" in st.session_state:
     del st.session_state["confs_confrontation_ready"]
+if "confs_simulation_completed" not in st.session_state:
+    st.session_state["confs_simulation_completed"] = False
 
 # Ensure "confs_agents_copied" is only created when "agents" is not empty
 if "confs_agents_copied" not in st.session_state or not st.session_state["confs_agents_copied"]:
@@ -284,11 +286,15 @@ elif st.session_state["confs_step"] == 6:
     if st.session_state["confs_gm_built"]:
         st.markdown("<br>", unsafe_allow_html=True)
         episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=12, step=1)
-        if st.button("Run Episodes", use_container_width=True):
-            with st.spinner(f"Running {episode_length} episodes..."):
-                for _ in range(episode_length):
-                    st.session_state["confs_gm_confrontation"].step()
-                st.session_state["confs_simulation_completed"] = True
+        
+        if episode_length < 4:
+            st.warning("Number of episodes must be at least 4 to proceed with the simulation.")
+        else:
+            if st.button("Run Episodes", use_container_width=True):
+                with st.spinner(f"Running {episode_length} episodes..."):
+                    for _ in range(episode_length):
+                        st.session_state["confs_gm_confrontation"].step()
+                    st.session_state["confs_simulation_completed"] = True
 
     # Navigation buttons
     _, col1, col2, _ = st.columns([1, 1, 1, 1])
@@ -309,7 +315,7 @@ elif st.session_state["confs_step"] == 6:
             st.rerun()
     
     # Display summary after simulation completes
-    if "confs_simulation_completed" in st.session_state and st.session_state["confs_simulation_completed"]:
+    if st.session_state.get("confs_simulation_completed"):
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("### Summary of the Confrontation:")
         selected_player = st.selectbox(

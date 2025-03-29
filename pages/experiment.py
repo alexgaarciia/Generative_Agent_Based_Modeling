@@ -169,12 +169,16 @@ elif st.session_state["exp_step"] == 3:
             st.success("Game Master built successfully")
 
     if st.session_state["exp_gm_built"]:
-        episode_length = st.number_input("Enter the number of episodes", min_value=4, value=4, max_value=12, step=1)
-        if st.button("Run Episodes", use_container_width=True):
-            with st.spinner(f"Running {episode_length} episodes..."):
-                for _ in range(episode_length):
-                    st.session_state["exp_gm"].step()
-                st.session_state["exp_simulation_run"] = True
+        episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=12, step=1)
+        
+        if episode_length < 4:
+            st.warning("Number of episodes must be at least 4 to proceed with the simulation.")
+        else:
+            if st.button("Run Episodes", use_container_width=True):
+                with st.spinner(f"Running {episode_length} episodes..."):
+                    for _ in range(episode_length):
+                        st.session_state["exp_gm"].step()
+                    st.session_state["exp_simulation_run"] = True
                 
     # Button display
     _, col1, col2, _ = st.columns([1, 1, 1, 1])  

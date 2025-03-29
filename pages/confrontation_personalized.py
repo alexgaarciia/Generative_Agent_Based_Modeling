@@ -211,11 +211,15 @@ if "agents" in st.session_state and st.session_state["agents"]:
         if st.session_state["confp_gm_built"]:
             st.markdown("<br>", unsafe_allow_html=True)
             episode_length = st.number_input("Enter the number of episodes", min_value=1, value=4, max_value=12, step=1)
-            if st.button("Run Episodes", use_container_width=True):
-                with st.spinner(f"Running {episode_length} episodes..."):
-                    for _ in range(episode_length):
-                        st.session_state["confp_gm_confrontation"].step()
-                    st.session_state["confp_simulation_completed"] = True
+
+            if episode_length < 4:
+                st.warning("Number of episodes must be at least 4 to proceed with the simulation.")
+            else:
+                if st.button("Run Episodes", use_container_width=True):
+                    with st.spinner(f"Running {episode_length} episodes..."):
+                        for _ in range(episode_length):
+                            st.session_state["confp_gm_confrontation"].step()
+                        st.session_state["confp_simulation_completed"] = True
                     
         # Button display
         _, col1, col2, _ = st.columns([1, 1, 1, 1])  
@@ -241,7 +245,7 @@ if "agents" in st.session_state and st.session_state["agents"]:
                 st.rerun()  
     
         # After the confrontation simulation, show the memory logs and summaries
-        if "confp_simulation_completed" in st.session_state and st.session_state["confp_simulation_completed"] is not None:
+        if st.session_state.get("confp_simulation_completed"):
             st.markdown("<br>", unsafe_allow_html=True)
 
             # Extract player names for memory log display
