@@ -35,14 +35,26 @@ with st.form("simulation_form"):
     model_options = ["Select a Model", "gpt-4", "gpt-3.5-turbo", "codestral-latest"]
     selected_model = st.selectbox("Select a Model for Simulation", model_options, help="Choose a model to use for simulations.")
 
-    # Submit Button
-    submitted = st.form_submit_button("Submit")
-
-    if submitted:
-        if api_key:
-            st.session_state["api_key"] = api_key
-        if selected_model != "Select a Model":
-            st.session_state["selected_model"] = selected_model
+    # Buttons
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col1:
+        home_button = st.form_submit_button("Go Back", use_container_width=True)
+        if home_button:
+            page_file = pages["Details"]
+            st.switch_page(page_file)
+    with col2:  
+        validate_button = st.form_submit_button("Submit", use_container_width=True)
+        if validate_button:
+            if api_key:
+                st.session_state["api_key"] = api_key
+            if selected_model != "Select a Model":
+                st.session_state["selected_model"] = selected_model
+    with col3: 
+        reset_button = st.form_submit_button("Reset", use_container_width=True)
+        if reset_button:
+            st.session_state["api_key"] = None
+            st.session_state["selected_model"] = None
+            st.session_state["model_validated"] = False
 
 
 # Validation check only if the model has not been validated
@@ -87,12 +99,12 @@ else:
     st.warning("Please enter your API key and select a model to proceed.")
 
 
-# "Go Back" Button
-st.markdown("<br>", unsafe_allow_html=True)
-_, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
-with col1:
-    home_button = st.button("Go Back", use_container_width=True)
-    if home_button:
-        # Switch to the selected page
-        page_file = pages["Details"]
-        st.switch_page(page_file)
+# # "Go Back" Button
+# st.markdown("<br>", unsafe_allow_html=True)
+# _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+# with col1:
+#     home_button = st.button("Go Back", use_container_width=True)
+#     if home_button:
+#         # Switch to the selected page
+#         page_file = pages["Details"]
+#         st.switch_page(page_file)
