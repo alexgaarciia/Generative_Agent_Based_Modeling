@@ -28,14 +28,15 @@ def validate_model(api_key, model_name):
         # Instantiate the appropriate language model based on the model name
         if model_name == "codestral-latest":
             model = mistral_model.MistralLanguageModel(api_key=api_key, model_name=model_name)
+            _ = model._client.models.list()
         else:
             model = gpt_model.GptLanguageModel(api_key=api_key, model_name=model_name)
+            _ = model._client.models.list() 
         
-        # Generate a sample response to validate the model connection
-        model.sample_text("How are you?")
-        return True 
+        return True
     
     except Exception as e:
-        print(f"Model validation failed: {e}")
+        # Print the exception message to indicate why validation failed
+        print(f"Model validation failed: {repr(e)}")
         return False 
     
