@@ -50,15 +50,13 @@ with st.form("simulation_form"):
 if st.session_state["api_key"] and st.session_state["selected_model"]:
     if not st.session_state["model_validated"]:
         with st.spinner("Validating connection with the LLM..."):
-            # Run validation if not validated yet
             validation_success = validate_model(st.session_state["api_key"], st.session_state["selected_model"])
-
-            if validation_success:
-                st.session_state["model_validated"] = True
-                st.success("The model is connected and validated successfully.")
-            else:
-                st.error("Model validation failed. Please check the API key and model name.")
-                st.stop()
+        if validation_success:
+            st.session_state["model_validated"] = True
+            st.success("The model is connected and validated successfully.")
+        else:
+            st.error("Model validation failed. Please check the API key and model name.")
+            st.stop()
     else:
         st.success("Model already validated.")
 
