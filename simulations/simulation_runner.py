@@ -363,7 +363,6 @@ def build_gm(players, shared_context):
     importance=importance_model_gm.importance,
     clock=clock.now)
     
-    # Extract player names
     player_names = [player.name for player in players]
 
     # Create components of the Game Master
