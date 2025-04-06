@@ -97,14 +97,3 @@ if st.session_state["api_key"] and st.session_state["selected_model"]:
                 st.switch_page(page_file)
 else:
     st.warning("Please enter your API key and select a model to proceed.")
-
-
-# # "Go Back" Button
-# st.markdown("<br>", unsafe_allow_html=True)
-# _, _ , _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
-# with col1:
-#     home_button = st.button("Go Back", use_container_width=True)
-#     if home_button:
-#         # Switch to the selected page
-#         page_file = pages["Details"]
-#         st.switch_page(page_file)
