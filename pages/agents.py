@@ -110,15 +110,16 @@ elif st.session_state["creation_step"] == 3:
     # Display and save agents after all are created
     if st.session_state.form_submitted:
         st.markdown("### Step 3: Review and Save Agents")
-        _, _, _, col1, _, _, _ = st.columns([1, 1, 1, 1, 1, 1, 1])  
+        _, col1, _ = st.columns([1, 1, 1])  
         with col1:
-            if st.button("Save Agents"):
-                # Generate a unique filename using the current timestamp and save agents to a JSON file
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"agents_{timestamp}.json"
-                
-                with open(filename, "w") as f:
-                    json.dump(st.session_state.agents, f, indent=4)
+            agents_json = json.dumps(st.session_state.agents, indent=4)
+            st.download_button(
+                label="Download Agents JSON",
+                data=agents_json,
+                file_name=f"agents_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                use_container_width=True
+            )
                     
         if st.session_state.agents:
             st.success("Agents saved successfully!")
