@@ -5,7 +5,7 @@ This project aims to make agentic AI equally accessible to users and researchers
 <!--The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simulations used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.-->
 
 ## Framework
-To accomplish this, a framework was developed using Streamlit, enabling users to design, simulate, and analyze interactions between generative agents. The simulations are powered by a library specialized in agent modeling ([Concordia](https://github.com/google-deepmind/concordia)), while machine learning techniques like cosine similarity and TF-IDF vectorization are used to compare and group agents based on their psychological traits and goals.
+To accomplish this, a framework was developed using Streamlit, enabling users to design, simulate, and analyze interactions between generative agents. The simulations are powered by a library specialized in agent modeling ([Concordia](https://github.com/google-deepmind/concordia)), while machine learning techniques are used to compare and group agents based on their psychological traits and goals.
 
 <!--In order to carry out these simulations we will be using [Concordia](https://github.com/google-deepmind/concordia), a library for generative social simulation. It makes it easy to create and use models where agents act on their own. You can define environments with a special agent called the Game Master (GM), who manages the world where player agents interact. The agents say what they want to do in simple language, and the GM turns their words into actions.-->
 
