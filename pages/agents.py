@@ -48,6 +48,36 @@ if st.session_state["creation_step"] == 1:
 elif st.session_state["creation_step"] == 2:
     st.write("To load pre-existing agents, please upload the JSON file containing the agent data. "
             "Ensure that the file is structured correctly for seamless integration.")    
+    
+    example_json = [
+        {
+            "name": "Alice",
+            "gender": "Female",
+            "political_ideology": "Moderate",
+            "traits": {
+                "extraversion": 1,
+                "neuroticism": 5,
+                "openness": 5,
+                "conscientiousness": 2,
+                "agreeableness": 3
+            },
+            "formative_ages": [10, 15, 20, 30, 40]
+        }
+    ]
+    with st.expander("See example format"):
+        st.markdown("""
+        **Each agent must follow this structure:**
+
+        - **`name`**: A string with the agent’s name (e.g., Alice).
+        - **`gender`**: Must be either Male or Female.
+        - **`political_ideology`**: One of the following options: Liberal, Conservative, Moderate, Libertarian, Socialist, Anarchist.
+        - **`traits`**: A dictionary with the agent’s psychological traits. Each trait is a number from **1 (low)** to **5 (high)**: extraversion, neuroticism, openness, conscientiousness, agreeableness.
+        - **`formative_ages`**: A list of **5 ages** (integers) that were significant in the agent’s development.
+
+        **Example JSON:**
+        """)
+        st.code(json.dumps(example_json, indent=4), language="json")
+
     uploaded_file = st.file_uploader(
         "Choose a JSON file with agent data",
         type="json", 
@@ -74,7 +104,6 @@ elif st.session_state["creation_step"] == 2:
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
             
-    col1, col2 = st.columns([1, 1])  
     col1, col2, col3 = st.columns([1, 1, 1])  
     with col1:
         go_back = st.button("Go Back", use_container_width=True)

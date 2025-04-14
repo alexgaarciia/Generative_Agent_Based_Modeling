@@ -105,20 +105,27 @@ def validate_agent(agent):
         # Check basic string fields
         if not isinstance(agent["name"], str):
             return False
-        if not isinstance(agent["gender"], str):
+        if agent["gender"] not in ["Male", "Female"]:
             return False
-        if not isinstance(agent["political_ideology"], str):
+        if agent["political_ideology"] not in [
+            "Liberal", "Conservative", "Moderate",
+            "Libertarian", "Socialist", "Anarchist"
+        ]:
             return False
 
-        # Check that all trait values are integers
+        # Validate traits
+        expected_traits = {"extraversion", "neuroticism", "openness", "conscientiousness", "agreeableness"}
         traits = agent["traits"]
-        if not all(isinstance(traits[key], int) for key in traits):
+        if set(traits.keys()) != expected_traits:
+            return False
+        if not all(isinstance(val, int) and 1 <= val <= 5 for val in traits.values()):
             return False
 
-        # Check that formative ages is a list of integers
-        if not isinstance(agent["formative_ages"], list):
+        # Validate formative ages
+        ages = agent["formative_ages"]
+        if not isinstance(ages, list) or len(ages) != 5:
             return False
-        if not all(isinstance(age, int) for age in agent["formative_ages"]):
+        if not all(isinstance(age, int) for age in ages):
             return False
         
         return True
@@ -152,7 +159,7 @@ def validate_agents_file(uploaded_file):
         # Validate each agent in the list
         for agent in agents_data:
             if not validate_agent(agent):
-                return False, f"Agent {agent.get('name', 'Unnamed')} has an invalid structure."
+                return False, f"Agent '{agent.get('name', 'Unnamed')}' has an invalid structure, please check the example format."
 
         return True, "The uploaded file is valid."
     except json.JSONDecodeError:
