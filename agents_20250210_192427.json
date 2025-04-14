@@ -1,0 +1,77 @@
+    {
+        "name": "Alice",
+        "gender": "Female",
+        "political_ideology": "Liberal",
+        "traits": {
+            "extraversion": 3,
+            "neuroticism": 3,
+            "openness": 4,
+            "conscientiousness": 5,
+            "agreeableness": 1
+        },
+        "formative_ages": [
+            8,
+            12,
+            21,
+            31,
+            39
+        ]
+    },
+    {
+        "name": "Bob",
+        "gender": "Male",
+        "political_ideology": "Conservative",
+        "traits": {
+            "extraversion": 2,
+            "neuroticism": 2,
+            "openness": 5,
+            "conscientiousness": 4,
+            "agreeableness": 2
+        },
+        "formative_ages": [
+            9,
+            14,
+            15,
+            24,
+            34
+        ]
+    },
+    {
+        "name": "Charlie",
+        "gender": "Male",
+        "political_ideology": "Anarchist",
+        "traits": {
+            "extraversion": 1,
+            "neuroticism": 3,
+            "openness": 5,
+            "conscientiousness": 4,
+            "agreeableness": 1
+        },
+        "formative_ages": [
+            12,
+            20,
+            22,
+            36,
+            37
+        ]
+    },
+    {
+        "name": "Dana",
+        "gender": "Female",
+        "political_ideology": "Conservative",
+        "traits": {
+            "extraversion": 2,
+            "neuroticism": 5,
+            "openness": 5,
+            "conscientiousness": 1,
+            "agreeableness": 2
+        },
+        "formative_ages": [
+            6,
+            18,
+            25,
+            28,
+            33
+        ]
+    }
+]
