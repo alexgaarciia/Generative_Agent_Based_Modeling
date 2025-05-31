@@ -1,0 +1,78 @@
+[
+    {
+        "name": "Elena",
+        "gender": "Female",
+        "political_ideology": "Socialist",
+        "traits": {
+            "extraversion": 4,
+            "neuroticism": 2,
+            "openness": 5,
+            "conscientiousness": 4,
+            "agreeableness": 3
+        },
+        "formative_ages": [
+            10,
+            18,
+            24,
+            25,
+            37
+        ]
+    },
+    {
+        "name": "Marcus",
+        "gender": "Male",
+        "political_ideology": "Libertarian",
+        "traits": {
+            "extraversion": 3,
+            "neuroticism": 2,
+            "openness": 3,
+            "conscientiousness": 5,
+            "agreeableness": 2
+        },
+        "formative_ages": [
+            7,
+            14,
+            20,
+            34,
+            39
+        ]
+    },
+    {
+        "name": "Mery",
+        "gender": "Female",
+        "political_ideology": "Moderate",
+        "traits": {
+            "extraversion": 3,
+            "neuroticism": 2,
+            "openness": 4,
+            "conscientiousness": 5,
+            "agreeableness": 5
+        },
+        "formative_ages": [
+            5,
+            7,
+            14,
+            20,
+            25
+        ]
+    },
+    {
+        "name": "Leo",
+        "gender": "Male",
+        "political_ideology": "Conservative",
+        "traits": {
+            "extraversion": 4,
+            "neuroticism": 3,
+            "openness": 2,
+            "conscientiousness": 3,
+            "agreeableness": 2
+        },
+        "formative_ages": [
+            11,
+            21,
+            25,
+            27,
+            38
+        ]
+    }
+]
