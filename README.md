@@ -1,5 +1,7 @@
 <!--![Python Version](https://img.shields.io/badge/python-3.12.4-blue)-->
 
+# [README UNDER CONSTRUCTION]
+
 # ConcordiaSims
 This project aims to make agentic AI equally accessible to users and researchers, particularly those without advanced technological expertise, enabling them to gain deeper insights into its interactions and decision-making processes.
 <!--The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simulations used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.-->
