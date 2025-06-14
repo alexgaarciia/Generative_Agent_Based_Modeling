@@ -1,6 +1,6 @@
 """
 This module provides a function to validate the connection to a language model using a given API key and model name.
-It verifies that the language model is accessible by attempting to generate a sample response.
+It verifies connectivity by attempting to list available models via the corresponding API client, without generating any response.
 """
 
 import sys

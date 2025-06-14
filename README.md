@@ -22,12 +22,9 @@ The comparisons between agents use machine learning techniques such as BERT-base
 - Results Visualization: Monitor and analyze simulation outcomes.
 
 ## 📂 Repository Resources
-<!-- To help navigate the repository, there are several .md files in the repository, explaining:
-- [How does the memory of agents work?](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/agents.md): EXPLAIN
-- [How to use Concordia with a local LLM?](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/local_concordia.md): EXPLAIN
-Project Structure: Overview of how the repository is organized and what each folder/file does. -->
+To help navigate the repository, there are several .md files in the repository, explaining:
+- [Project structure](https://github.com/alexgaarciia/Generative_Agent_Based_Modeling/blob/main/docs/REPOSITORY_STRUCTURE.md): Overview of how the repository is organized and what each folder/file does. 
+- [How to run locally](https://github.com/alexgaarciia/Generative_Agent_Based_Modeling/blob/main/docs/RUN_LOCALLY.md): Step-by-step instructions to set up and run the platform locally.
 
 ## 📹 Explanatory YouTube Video
-
-## ⚙️ Technology Stack
-Python, HTML, CSS
+You can also take a look at this video, where I go through the functionalitites of the platform! [TBD](TBD)
