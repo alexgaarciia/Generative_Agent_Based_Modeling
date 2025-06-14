@@ -27,4 +27,4 @@ To help navigate the repository, there are several .md files in the repository, 
 - [How to run locally](https://github.com/alexgaarciia/Generative_Agent_Based_Modeling/blob/main/docs/RUN_LOCALLY.md): Step-by-step instructions to set up and run the platform locally.
 
 ## 📹 Explanatory YouTube Video
-You can also take a look at this video, where I go through the functionalitites of the platform! [TBD](TBD)
+You can also take a look at this video, where I go through the functionalitites of the platform! [Click here](https://youtu.be/8t1rYQrq4Z4)
