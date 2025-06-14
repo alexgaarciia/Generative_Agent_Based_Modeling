@@ -1,21 +1,33 @@
-<!--![Python Version](https://img.shields.io/badge/python-3.12.4-blue)-->
+## 1️⃣ Introduction
+This repository represents the practical part of my Final Degree Project, which seeks to democratize access to GABM and generative agents in two steps:
+1. Documenting the accessibility challenges and opportunities of Generative Agent-Based Modeling (GABM) in a scientific context.
+2. Developing an accessible, easy-to-use platform that allows a broader audience to design, simulate, and analyze generative agents without requiring advanced technical skills.
 
-# [README UNDER CONSTRUCTION]
+While the first objective is addressed through a dedicated scientific publication ([paper here](https://arxiv.org/abs/2411.07038)), this repository is focused on the second goal: providing an open-source, intuitive platform that gives anyone the chance for analyzing and understanding how generative agents make decisions and interact across various contexts, without the need for technical skills.
 
-# ConcordiaSims
-This project aims to make agentic AI equally accessible to users and researchers, particularly those without advanced technological expertise, enabling them to gain deeper insights into its interactions and decision-making processes.
-<!--The main goal of this repository is to carry out simulations using generative agent-based models (GABMs). These are computer simulations used to study interactions between people, things, places and time. The main characteristic is that these are constructed using LLMs so that they act reasonably.-->
+To accomplish this, a platform was developed using Streamlit, built on top of a library specialized in agent modeling, [Concordia](https://github.com/google-deepmind/concordia). It makes it easy to create and use models where agents act on their own. You can define environments with a special agent called the Game Master (GM), who manages the world where player agents interact. The agents say what they want to do in simple language, and the GM turns their words into actions.
 
-## Framework
-To accomplish this, a framework was developed using Streamlit, enabling users to design, simulate, and analyze interactions between generative agents. The simulations are powered by a library specialized in agent modeling ([Concordia](https://github.com/google-deepmind/concordia)), while machine learning techniques are used to compare and group agents based on their psychological traits and goals.
+The application contains different modules, allowing users to:
+- Confront all defined agents, 
+- Select and confront a specific subset of agents, 
+- Identify and confront the most similar or most different agents
 
-<!--In order to carry out these simulations we will be using [Concordia](https://github.com/google-deepmind/concordia), a library for generative social simulation. It makes it easy to create and use models where agents act on their own. You can define environments with a special agent called the Game Master (GM), who manages the world where player agents interact. The agents say what they want to do in simple language, and the GM turns their words into actions.-->
+The comparisons between agents use machine learning techniques such as BERT-based embeddings and cosine similarity to group and differentiate them based on psychological traits, goals, context, and political ideology.
 
-<!--Traditionally, *Concordia requires access to a standard LLM API* to function effectively. However, instead of relying on a remote API, we will be using LM Studio to host a Local Inference Server. This server mimics OpenAI API endpoints, allowing us to run the LLM locally on our own hardware. -->
+## 🔍 Platform Overview
+- LLM Configuration: Set and verify your API key and choose the desired large language model for agent reasoning.
+- Agent Creation: Design and customize agents using either a guided form or by uploading a JSON.
+- Simulation Options: Choose from the three options of simulations, all powered by the Concordia library.
+- Experiment Configuration: Easily set up and modify simulation parameters and scenarios.
+- Results Visualization: Monitor and analyze simulation outcomes.
 
-<!--## Useful Information
-- How does the memory of agents work? [Link Here](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/agents.md)
-- How to use Concordia with a local LLM? [Link Here](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/local_concordia.md)-->
+## 📂 Repository Resources
+<!-- To help navigate the repository, there are several .md files in the repository, explaining:
+- [How does the memory of agents work?](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/agents.md): EXPLAIN
+- [How to use Concordia with a local LLM?](https://github.com/alexgaarciia/ConcordiaSims/blob/main/docs/local_concordia.md): EXPLAIN
+Project Structure: Overview of how the repository is organized and what each folder/file does. -->
 
-## Technologies Used
-Python, HTML, CSS, Streamlit
+## 📹 Explanatory YouTube Video
+
+## ⚙️ Technology Stack
+Python, HTML, CSS
